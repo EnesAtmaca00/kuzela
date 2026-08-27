@@ -1,0 +1,122 @@
+:root {
+  --kz-ink: #111111;
+  --kz-paper: #f5f1e8;
+  --kz-white: #ffffff;
+  --kz-accent: #dfff4f;
+  --kz-line: rgba(17, 17, 17, 0.16);
+  --kz-radius-sm: 16px;
+  --kz-radius-lg: 32px;
+  --kz-radius-pill: 999px;
+  --kz-ease: cubic-bezier(.22, 1, .36, 1);
+}
+
+html { scroll-behavior: smooth; }
+
+::selection {
+  background: var(--kz-ink);
+  color: var(--kz-white);
+}
+
+.kz-shell {
+  background: var(--kz-paper);
+  color: var(--kz-ink);
+}
+
+.kz-glass-nav {
+  background: rgba(245, 241, 232, .78);
+  border: 1px solid rgba(17, 17, 17, .10);
+  backdrop-filter: blur(18px) saturate(135%);
+  -webkit-backdrop-filter: blur(18px) saturate(135%);
+}
+
+.kz-editorial-title {
+  letter-spacing: -.055em;
+  line-height: .88;
+  text-wrap: balance;
+}
+
+.kz-eyebrow {
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.kz-order-cta {
+  border-radius: var(--kz-radius-pill);
+  transition: transform .45s var(--kz-ease), box-shadow .45s var(--kz-ease), background-color .45s var(--kz-ease);
+}
+
+.kz-order-cta:hover {
+  transform: translateY(-3px) scale(1.015);
+  box-shadow: 0 18px 45px rgba(17, 17, 17, .18);
+}
+
+.kz-card {
+  border: 1px solid var(--kz-line);
+  border-radius: var(--kz-radius-lg);
+  overflow: hidden;
+  transition: transform .6s var(--kz-ease), box-shadow .6s var(--kz-ease);
+}
+
+.kz-card:hover {
+  transform: translateY(-7px);
+  box-shadow: 0 28px 70px rgba(17, 17, 17, .13);
+}
+
+.kz-media {
+  border-radius: var(--kz-radius-lg);
+  overflow: hidden;
+}
+
+.kz-media img {
+  transition: transform 1.2s var(--kz-ease);
+}
+
+.kz-media:hover img {
+  transform: scale(1.045);
+}
+
+.kz-reveal {
+  animation: kzReveal .9s var(--kz-ease) both;
+}
+
+.kz-reveal-delay {
+  animation: kzReveal .9s .12s var(--kz-ease) both;
+}
+
+.kz-marquee {
+  white-space: nowrap;
+  will-change: transform;
+  animation: kzMarquee 24s linear infinite;
+}
+
+@keyframes kzReveal {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes kzMarquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .kz-reveal,
+  .kz-reveal-delay,
+  .kz-marquee { animation: none !important; }
+  .kz-card,
+  .kz-order-cta,
+  .kz-media img { transition: none !important; }
+}
+
+@media (max-width: 767px) {
+  .kz-editorial-title {
+    letter-spacing: -.045em;
+    line-height: .92;
+  }
+
+  .kz-card,
+  .kz-media {
+    border-radius: 22px;
+  }
+}
