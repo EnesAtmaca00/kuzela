@@ -1,10 +1,30 @@
-// API Reference: https://www.wix.com/velo/reference/api-overview/introduction
-// “Hello, World!” Example: https://learn-code.wix.com/en/article/hello-world
+function addClassToType(type, className) {
+    const elements = $w(type);
+    if (!Array.isArray(elements)) return;
+
+    elements.forEach((element) => {
+        if (element?.customClassList?.add) {
+            element.customClassList.add([className]);
+        }
+    });
+}
 
 $w.onReady(function () {
-    // Write your JavaScript here
+    addClassToType('Section', 'kz-section');
+    addClassToType('Button', 'kz-button');
+    addClassToType('Image', 'kz-image');
+    addClassToType('Box', 'kz-card');
 
-    // To select an element by ID use: $w('#elementID')
+    const sections = $w('Section');
+    if (Array.isArray(sections) && sections.length > 0 && sections[0]?.customClassList?.add) {
+        sections[0].customClassList.add(['kz-hero']);
+    }
 
-    // Click 'Preview' to run your code
+    const texts = $w('Text');
+    if (Array.isArray(texts)) {
+        texts.slice(0, 3).forEach((text, index) => {
+            if (!text?.customClassList?.add) return;
+            text.customClassList.add([index === 0 ? 'kz-reveal' : 'kz-reveal-delay']);
+        });
+    }
 });
