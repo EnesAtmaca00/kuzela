@@ -1,10 +1,15 @@
-// API Reference: https://www.wix.com/velo/reference/api-overview/introduction
-// “Hello, World!” Example: https://learn-code.wix.com/en/article/hello-world
+function addClassToType(type, className) {
+    const elements = $w(type);
+    if (!Array.isArray(elements)) return;
+
+    elements.forEach((element) => {
+        if (element?.customClassList?.add) {
+            element.customClassList.add([className]);
+        }
+    });
+}
 
 $w.onReady(function () {
-    // Write your JavaScript here
-
-    // To select an element by ID use: $w('#elementID')
-
-    // Click 'Preview' to run your code
+    addClassToType('Button', 'kz-button');
+    addClassToType('Image', 'kz-image');
 });
