@@ -1,36 +1,23 @@
-const ORDER_URL = 'https://kuzelathebowlhouse.itsready.be/nl';
-
-function addClass(element, className) {
-    if (element?.customClassList?.add) {
-        element.customClassList.add([className]);
+function selectAll(type) {
+    try {
+        const elements = $w(type);
+        return Array.isArray(elements) ? elements : [];
+    } catch (error) {
+        return [];
     }
 }
 
-function addClassToType(type, className) {
-    const elements = $w(type);
-    if (!Array.isArray(elements)) return [];
-
-    elements.forEach((element) => addClass(element, className));
-    return elements;
-}
-
-function setIfPresent(element, prop, value) {
-    if (element && prop in element) {
-        element[prop] = value;
-    }
+function collapseAll(type) {
+    selectAll(type).forEach((element) => {
+        if (typeof element.collapse === 'function') {
+            element.collapse();
+        }
+    });
 }
 
 $w.onReady(function () {
-    const texts = $w('Text');
-    const buttons = addClassToType('Button', 'kz-button');
-    addClassToType('Image', 'kz-image');
+    collapseAll('Header');
+    collapseAll('Footer');
 
-    if (Array.isArray(texts) && texts[0]) {
-        setIfPresent(texts[0], 'text', 'Kuzela The Bowl House');
-    }
-
-    buttons.forEach((button) => {
-        setIfPresent(button, 'link', ORDER_URL);
-        setIfPresent(button, 'target', '_self');
-    });
+    ['Text', 'Menu', 'Image', 'Button'].forEach((type) => collapseAll(type));
 });
