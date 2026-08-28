@@ -1,3 +1,5 @@
+const ORDER_URL = 'https://kuzelathebowlhouse.itsready.be/nl';
+
 function addClass(element, className) {
     if (element?.customClassList?.add) {
         element.customClassList.add([className]);
@@ -12,12 +14,41 @@ function addClassToType(type, className) {
     return elements;
 }
 
+function setIfPresent(element, prop, value) {
+    if (element && prop in element) {
+        element[prop] = value;
+    }
+}
+
+function wireLinks(elements) {
+    elements.forEach((element) => {
+        setIfPresent(element, 'link', ORDER_URL);
+        setIfPresent(element, 'target', '_self');
+    });
+}
+
 $w.onReady(function () {
     const sections = addClassToType('Section', 'kz-section');
     const buttons = addClassToType('Button', 'kz-button');
     const images = addClassToType('Image', 'kz-image');
     const boxes = addClassToType('Box', 'kz-card');
     const texts = $w('Text');
+
+    const textUpdates = [
+        'Kuzela The Bowl House',
+        'Jouw bowl. Jouw smaak.',
+        'Verse pokébowls, wraps, quesadilla’s en wings in Laakdal. Stel je favoriet samen, bestel online en geniet zonder gedoe.',
+        '© 2026 Kuzela The Bowl House · Markt 23, 2430 Laakdal'
+    ];
+
+    if (Array.isArray(texts)) {
+        texts.forEach((text, index) => {
+            if (textUpdates[index]) setIfPresent(text, 'text', textUpdates[index]);
+            if (index === 0) addClass(text, 'kz-eyebrow');
+            if (index === 1) addClass(text, 'kz-editorial');
+            if (index < 3) addClass(text, index === 0 ? 'kz-reveal' : 'kz-reveal-delay');
+        });
+    }
 
     if (sections.length) {
         addClass(sections[0], 'kz-hero');
@@ -27,17 +58,12 @@ $w.onReady(function () {
         if (sections.length > 4) addClass(sections[sections.length - 1], 'kz-final-zone');
     }
 
-    if (Array.isArray(texts)) {
-        texts.forEach((text, index) => {
-            if (index === 0) addClass(text, 'kz-eyebrow');
-            if (index === 1) addClass(text, 'kz-editorial');
-            if (index < 3) addClass(text, index === 0 ? 'kz-reveal' : 'kz-reveal-delay');
-        });
-    }
+    buttons.forEach((button, index) => {
+        if (index === 0) setIfPresent(button, 'label', 'Bestel online');
+        addClass(button, 'kz-reveal-delay');
+    });
+    wireLinks(buttons);
 
-    if (buttons[0]) addClass(buttons[0], 'kz-reveal-delay');
-
-    // Keep image/card effects deliberately restrained: premium, not template-like.
     images.slice(0, 4).forEach((image) => addClass(image, 'kz-reveal'));
     boxes.slice(0, 6).forEach((box) => addClass(box, 'kz-reveal-delay'));
 });
