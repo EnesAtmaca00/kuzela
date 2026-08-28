@@ -35,18 +35,15 @@ $w.onReady(function () {
     const texts = $w('Text');
 
     const textUpdates = [
-        'Kuzela The Bowl House',
         'Jouw bowl. Jouw smaak.',
-        'Verse pokébowls, wraps, quesadilla’s en wings in Laakdal. Stel je favoriet samen, bestel online en geniet zonder gedoe.',
-        '© 2026 Kuzela The Bowl House · Markt 23, 2430 Laakdal'
+        'Verse pokébowls, wraps, quesadilla’s en wings in Laakdal. Stel je favoriet samen, bestel online en geniet zonder gedoe.'
     ];
 
     if (Array.isArray(texts)) {
         texts.forEach((text, index) => {
             if (textUpdates[index]) setIfPresent(text, 'text', textUpdates[index]);
-            if (index === 0) addClass(text, 'kz-eyebrow');
-            if (index === 1) addClass(text, 'kz-editorial');
-            if (index < 3) addClass(text, index === 0 ? 'kz-reveal' : 'kz-reveal-delay');
+            if (index === 0) addClass(text, 'kz-editorial');
+            if (index < 2) addClass(text, index === 0 ? 'kz-reveal' : 'kz-reveal-delay');
         });
     }
 
