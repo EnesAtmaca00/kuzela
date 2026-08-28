@@ -25,14 +25,9 @@ $w.onReady(function () {
     const buttons = addClassToType('Button', 'kz-button');
     addClassToType('Image', 'kz-image');
 
-    if (Array.isArray(texts)) {
-        texts.forEach((text) => {
-            const current = (text.text || '').trim();
-            if (current === 'Business Name') setIfPresent(text, 'text', 'Kuzela');
-            if (current.includes('Business Name') || current.includes('Wix Studio')) {
-                setIfPresent(text, 'text', '© 2026 Kuzela The Bowl House · Markt 23, 2430 Laakdal');
-            }
-        });
+    if (Array.isArray(texts) && texts.length) {
+        setIfPresent(texts[0], 'text', 'Kuzela The Bowl House');
+        setIfPresent(texts[texts.length - 1], 'text', '© 2026 Kuzela The Bowl House · Markt 23, 2430 Laakdal');
     }
 
     buttons.forEach((button) => {
