@@ -25,8 +25,8 @@ $w.onReady(function () {
     const buttons = addClassToType('Button', 'kz-button');
     addClassToType('Image', 'kz-image');
 
-    if (Array.isArray(texts)) {
-        texts.forEach((text) => setIfPresent(text, 'text', 'Kuzela The Bowl House'));
+    if (Array.isArray(texts) && texts[0]) {
+        setIfPresent(texts[0], 'text', 'Kuzela The Bowl House');
     }
 
     buttons.forEach((button) => {
