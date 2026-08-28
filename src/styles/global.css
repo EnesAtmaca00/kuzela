@@ -1,59 +1,56 @@
 :root {
   --kz-ink: #11120f;
-  --kz-ink-soft: #24261f;
   --kz-paper: #f3efe5;
   --kz-paper-2: #ebe5d7;
   --kz-white: #fffdf7;
   --kz-accent: #d9f24f;
-  --kz-accent-deep: #b7d42f;
   --kz-line: rgba(17, 18, 15, .14);
   --kz-shadow: 0 26px 70px rgba(25, 24, 18, .13);
-  --kz-radius: 30px;
-  --kz-radius-mobile: 20px;
+  --kz-radius: 28px;
   --kz-pill: 999px;
   --kz-ease: cubic-bezier(.22, 1, .36, 1);
-  --kz-gutter: clamp(20px, 4.2vw, 72px);
-  --kz-section-space: clamp(76px, 10vw, 160px);
 }
 
 html { scroll-behavior: smooth; }
+::selection { background: var(--kz-ink); color: var(--kz-white); }
 
-::selection {
-  background: var(--kz-ink);
-  color: var(--kz-white);
-}
-
-.page {
+.page,
+.wixui-page {
   background: var(--kz-paper);
   color: var(--kz-ink);
   overflow: clip;
 }
 
-.header {
-  background: rgba(243, 239, 229, .84);
-  border-bottom: 1px solid rgba(17, 18, 15, .08);
+.header,
+.wixui-header {
+  background: rgba(243, 239, 229, .90);
+  border-bottom: 1px solid rgba(17, 18, 15, .10);
   backdrop-filter: blur(18px) saturate(135%);
   -webkit-backdrop-filter: blur(18px) saturate(135%);
 }
 
-.footer {
+.footer,
+.wixui-footer {
+  min-height: 96px;
   background: var(--kz-ink);
   color: var(--kz-white);
 }
 
-.section {
-  position: relative;
-}
+.wixui-section,
+.section { position: relative; }
 
+.wixui-rich-text,
 .rich-text { color: var(--kz-ink); }
 
+.wixui-rich-text__text h1,
 .rich-text__text h1 {
-  font-size: clamp(56px, 8vw, 132px);
-  letter-spacing: -.06em;
-  line-height: .84;
+  font-size: clamp(62px, 10.5vw, 138px);
+  letter-spacing: -.064em;
+  line-height: .83;
   text-wrap: balance;
 }
 
+.wixui-rich-text__text h2,
 .rich-text__text h2 {
   font-size: clamp(42px, 5.7vw, 92px);
   letter-spacing: -.052em;
@@ -61,19 +58,15 @@ html { scroll-behavior: smooth; }
   text-wrap: balance;
 }
 
-.rich-text__text h3,
-.rich-text__text h4 {
-  letter-spacing: -.028em;
-  line-height: 1;
-}
-
+.wixui-rich-text__text p,
 .rich-text__text p {
   line-height: 1.55;
   max-width: 64ch;
 }
 
+.wixui-button,
 .button {
-  min-height: 48px;
+  min-height: 50px;
   border-radius: var(--kz-pill);
   background: var(--kz-ink);
   color: var(--kz-white);
@@ -81,6 +74,7 @@ html { scroll-behavior: smooth; }
   transition: transform .42s var(--kz-ease), box-shadow .42s var(--kz-ease), background-color .3s ease, color .3s ease;
 }
 
+.wixui-button:hover,
 .button:hover {
   transform: translateY(-3px);
   background: var(--kz-accent);
@@ -88,105 +82,51 @@ html { scroll-behavior: smooth; }
   box-shadow: 0 16px 38px rgba(17, 18, 15, .16);
 }
 
-.button__label {
-  letter-spacing: -.012em;
-  font-weight: 600;
-}
+.wixui-button__label,
+.button__label { letter-spacing: -.012em; font-weight: 700; }
 
+.wixui-image,
 .image {
   border-radius: var(--kz-radius);
   overflow: hidden;
   transition: transform .8s var(--kz-ease), filter .8s var(--kz-ease);
 }
 
+.wixui-image:hover,
 .image:hover { transform: scale(1.012); }
 
+.wixui-box,
 .box { border-radius: var(--kz-radius); }
 
-.horizontal-line,
-.vertical-line { opacity: .14; }
+.kz-section,
+.wixui-kz-section { isolation: isolate; }
 
-.kz-section {
-  isolation: isolate;
-}
-
-.kz-section:nth-of-type(even) { background: var(--kz-paper-2); }
-
-.kz-hero {
-  min-height: min(940px, 92vh);
+.kz-hero,
+.wixui-kz-hero {
+  min-height: min(860px, 90vh);
   background:
-    linear-gradient(90deg, rgba(13, 14, 11, .84) 0%, rgba(13, 14, 11, .58) 39%, rgba(13, 14, 11, .16) 72%, rgba(13, 14, 11, .08) 100%),
+    linear-gradient(90deg, rgba(13, 14, 11, .82), rgba(13, 14, 11, .42) 48%, rgba(13, 14, 11, .08)),
     url('https://static.wixstatic.com/media/7279ae_9ec162d54ad64766b6bfa0def41bc811~mv2.jpg') center 42% / cover no-repeat;
 }
 
-.kz-hero .rich-text,
-.kz-hero .rich-text__text,
-.kz-hero .rich-text__text h1,
-.kz-hero .rich-text__text h2,
-.kz-hero .rich-text__text h3,
-.kz-hero .rich-text__text p { color: var(--kz-white); }
+.kz-hero .wixui-rich-text,
+.kz-hero .wixui-rich-text__text,
+.kz-hero .wixui-rich-text__text h1,
+.kz-hero .wixui-rich-text__text p,
+.wixui-kz-hero .wixui-rich-text,
+.wixui-kz-hero .wixui-rich-text__text,
+.wixui-kz-hero .wixui-rich-text__text h1,
+.wixui-kz-hero .wixui-rich-text__text p { color: var(--kz-white); }
 
-.kz-hero .button {
+.kz-hero .wixui-button,
+.wixui-kz-hero .wixui-button {
   background: var(--kz-accent);
   color: var(--kz-ink);
   border-color: var(--kz-accent);
 }
 
-.kz-hero .button:hover {
-  background: var(--kz-white);
-  border-color: var(--kz-white);
-}
-
-.kz-hero::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(180deg, rgba(0,0,0,.08), transparent 25%, rgba(0,0,0,.22)),
-    radial-gradient(circle at 75% 35%, transparent 0 30%, rgba(0,0,0,.06) 70%);
-  z-index: -1;
-}
-
-.kz-panel {
-  background: var(--kz-paper);
-  border-top: 1px solid var(--kz-line);
-  border-bottom: 1px solid var(--kz-line);
-}
-
-.kz-menu-zone {
-  background: var(--kz-paper-2);
-}
-
-.kz-story-zone {
-  background: var(--kz-white);
-}
-
-.kz-final-zone {
-  background: var(--kz-ink);
-  color: var(--kz-white);
-}
-
-.kz-final-zone .rich-text,
-.kz-final-zone .rich-text__text,
-.kz-final-zone .rich-text__text h1,
-.kz-final-zone .rich-text__text h2,
-.kz-final-zone .rich-text__text h3,
-.kz-final-zone .rich-text__text p { color: var(--kz-white); }
-
-.kz-final-zone .button {
-  background: var(--kz-accent);
-  border-color: var(--kz-accent);
-  color: var(--kz-ink);
-}
-
-.kz-button { border-radius: var(--kz-pill); }
-
-.kz-image {
-  box-shadow: 0 1px 0 rgba(255,255,255,.35) inset;
-}
-
-.kz-card {
+.kz-card,
+.wixui-kz-card {
   border: 1px solid var(--kz-line);
   border-radius: var(--kz-radius);
   background: rgba(255, 253, 247, .62);
@@ -194,77 +134,62 @@ html { scroll-behavior: smooth; }
   transition: transform .56s var(--kz-ease), box-shadow .56s var(--kz-ease), border-color .3s ease;
 }
 
-.kz-card:hover {
+.kz-card:hover,
+.wixui-kz-card:hover {
   transform: translateY(-7px);
   border-color: rgba(17, 18, 15, .22);
   box-shadow: var(--kz-shadow);
 }
 
-.kz-editorial {
-  letter-spacing: -.055em;
-  line-height: .9;
+.kz-editorial,
+.wixui-kz-editorial {
+  letter-spacing: -.064em;
+  line-height: .83;
   text-wrap: balance;
 }
 
-.kz-eyebrow {
+.kz-eyebrow,
+.wixui-kz-eyebrow {
   letter-spacing: .16em;
   text-transform: uppercase;
+  font-weight: 800;
 }
 
-.kz-reveal { animation: kzReveal .85s var(--kz-ease) both; }
-.kz-reveal-delay { animation: kzReveal .85s .12s var(--kz-ease) both; }
+.kz-reveal,
+.wixui-kz-reveal { animation: kzReveal .85s var(--kz-ease) both; }
+.kz-reveal-delay,
+.wixui-kz-reveal-delay { animation: kzReveal .85s .12s var(--kz-ease) both; }
 
 @keyframes kzReveal {
   from { opacity: 0; transform: translateY(24px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-@media (min-width: 768px) and (max-width: 1199px) {
-  .rich-text__text h1 { font-size: clamp(62px, 9vw, 104px); }
-  .kz-hero { min-height: 84vh; }
-}
-
 @media (max-width: 767px) {
-  :root {
-    --kz-gutter: 18px;
-    --kz-section-space: 72px;
-  }
-
-  .image,
-  .box,
-  .kz-card { border-radius: var(--kz-radius-mobile); }
-
+  .wixui-rich-text__text h1,
   .rich-text__text h1 {
-    font-size: clamp(48px, 15vw, 72px);
+    font-size: clamp(50px, 15vw, 74px);
     letter-spacing: -.052em;
     line-height: .88;
   }
 
-  .rich-text__text h2,
-  .kz-editorial {
-    font-size: clamp(38px, 11vw, 58px);
-    letter-spacing: -.044em;
-    line-height: .94;
-  }
-
-  .rich-text__text p { line-height: 1.5; }
-
-  .kz-hero {
-    min-height: 80svh;
+  .kz-hero,
+  .wixui-kz-hero {
+    min-height: 78svh;
     background-position: 64% center;
-    background-image:
-      linear-gradient(180deg, rgba(13, 14, 11, .46) 0%, rgba(13, 14, 11, .26) 40%, rgba(13, 14, 11, .76) 100%),
-      url('https://static.wixstatic.com/media/7279ae_9ec162d54ad64766b6bfa0def41bc811~mv2.jpg');
   }
-
-  .button { min-height: 50px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  .wixui-button,
+  .wixui-image,
+  .wixui-kz-card,
   .button,
   .image,
   .kz-card { transition: none !important; }
+  .wixui-kz-reveal,
+  .wixui-kz-reveal-delay,
   .kz-reveal,
   .kz-reveal-delay { animation: none !important; }
 }
