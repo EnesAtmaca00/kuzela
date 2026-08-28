@@ -15,9 +15,20 @@ function collapseAll(type) {
     });
 }
 
+function collapseById(id) {
+    try {
+        const element = $w(id);
+        if (typeof element.collapse === 'function') element.collapse();
+    } catch (error) {
+        // The template can rename structural sections between editor versions.
+    }
+}
+
 $w.onReady(function () {
     collapseAll('Header');
     collapseAll('Footer');
+    collapseById('#section3');
+    collapseById('#section4');
 
     ['Text', 'Menu', 'Image', 'Button'].forEach((type) => collapseAll(type));
 });
