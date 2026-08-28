@@ -42,11 +42,12 @@ html { scroll-behavior: smooth; }
 .wixui-rich-text,
 .rich-text { color: var(--kz-ink); }
 
+#comp-mtc65vf41 h1,
 .wixui-rich-text__text h1,
 .rich-text__text h1 {
-  font-size: clamp(62px, 10.5vw, 138px);
-  letter-spacing: -.064em;
-  line-height: .83;
+  font-size: clamp(58px, 11vw, 142px) !important;
+  letter-spacing: -.064em !important;
+  line-height: .86 !important;
   text-wrap: balance;
 }
 
@@ -166,11 +167,12 @@ html { scroll-behavior: smooth; }
 }
 
 @media (max-width: 767px) {
+  #comp-mtc65vf41 h1,
   .wixui-rich-text__text h1,
   .rich-text__text h1 {
-    font-size: clamp(50px, 15vw, 74px);
-    letter-spacing: -.052em;
-    line-height: .88;
+    font-size: clamp(50px, 15vw, 74px) !important;
+    letter-spacing: -.052em !important;
+    line-height: .88 !important;
   }
 
   .kz-hero,
