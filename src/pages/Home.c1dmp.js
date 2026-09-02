@@ -17,10 +17,10 @@ function collapseAll(type, keepIds = []) {
 
 $w.onReady(function () {
     ['Text', 'Button', 'Image', 'Box'].forEach((type) => collapseAll(type));
-    collapseAll('HtmlComponent');
-    collapseAll('CustomElement', ['customElement1']);
+    collapseAll('CustomElement');
+    collapseAll('HtmlComponent', ['html1']);
 
-    const app = $w('#customElement1');
+    const app = $w('#html1');
     if (typeof app.show === 'function') app.show();
     if (typeof app.expand === 'function') app.expand();
 });
