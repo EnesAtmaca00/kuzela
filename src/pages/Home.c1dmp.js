@@ -16,10 +16,11 @@ function collapseAll(type, keepIds = []) {
 }
 
 $w.onReady(function () {
-    ['Text', 'Button', 'Image', 'Box', 'CustomElement'].forEach((type) => collapseAll(type));
-    collapseAll('HtmlComponent', ['html1']);
+    ['Text', 'Button', 'Image', 'Box'].forEach((type) => collapseAll(type));
+    collapseAll('HtmlComponent');
+    collapseAll('CustomElement', ['customElement1']);
 
-    const embed = $w('#html1');
-    if (typeof embed.show === 'function') embed.show();
-    if (typeof embed.expand === 'function') embed.expand();
+    const app = $w('#customElement1');
+    if (typeof app.show === 'function') app.show();
+    if (typeof app.expand === 'function') app.expand();
 });
