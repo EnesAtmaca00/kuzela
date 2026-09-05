@@ -65,10 +65,13 @@ export async function loadHighlights(wrap, stages) {
     note('sectionIds', sectionIds.length);
     if (!sectionIds.length) return [];
 
-    const sectionsResponse = await listSections({ sectionIds });
-    const sectionById = new Map(
-        ((sectionsResponse && sectionsResponse.sections) || []).map((s) => [s.id, s])
-    );
+    // sectionIds/itemIds filtresi bu SDK'da bos sonuc donduruyor (menu 8 bolum
+    // bildiriyor ama filtreli cagri 0 bolum getiriyordu). Hepsini cekip id ile
+    // eslestirmek hem calisiyor hem de bu menu icin ucuz: 8 bolum, 38 urun.
+    const sectionsResponse = await listSections({ paging: { limit: 100 } });
+    const sectionList = (sectionsResponse && sectionsResponse.sections) || [];
+    note('sectionsFetched', sectionList.length);
+    const sectionById = new Map(sectionList.map((s) => [s.id, s]));
 
     // Bolumleri menudeki siraya gore geziyoruz; listSections sirayi korumuyor.
     const orderedSections = sectionIds.map((id) => sectionById.get(id)).filter(Boolean);
@@ -83,7 +86,7 @@ export async function loadHighlights(wrap, stages) {
     note('itemIds', itemIds.length);
     if (!itemIds.length) return [];
 
-    const itemsResponse = await listItems({ itemIds, onlyVisible: true });
+    const itemsResponse = await listItems({ paging: { limit: 500 }, onlyVisible: true });
     const itemList = (itemsResponse && itemsResponse.items) || [];
     note('items', itemList.length);
     note('eligible', itemList.filter(isEligible).length);
