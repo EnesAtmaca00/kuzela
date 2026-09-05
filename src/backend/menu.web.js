@@ -19,10 +19,11 @@ const WRAPPERS = [
 export const getHighlights = webMethod(Permissions.Anyone, async () => {
     const errors = [];
     for (const [label, wrap] of WRAPPERS) {
+        const stages = {};
         try {
-            const items = await loadHighlights(wrap);
+            const items = await loadHighlights(wrap, stages);
             if (items.length) return { items, errors, used: label };
-            errors.push(`${label}: bos sonuc`);
+            errors.push(`${label}: bos sonuc ${JSON.stringify(stages)}`);
         } catch (error) {
             // Hata yutulmuyor: menu okunamadiginda sebebini sayfa kodu
             // konsola yaziyor, yoksa kartlar sessizce yedek listede kaliyor.

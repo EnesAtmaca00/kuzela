@@ -46,17 +46,23 @@ function toCard(item) {
     };
 }
 
-export async function loadHighlights(wrap) {
+export async function loadHighlights(wrap, stages) {
+    const note = (key, value) => {
+        if (stages) stages[key] = value;
+    };
+
     const listMenus = wrap(menus.listMenus);
     const listSections = wrap(sections.listSections);
     const listItems = wrap(items.listItems);
 
     const menusResponse = await listMenus({ onlyVisible: true });
     const menuList = (menusResponse && menusResponse.menus) || [];
+    note('menus', menuList.length);
     const menu = menuList.find((entry) => entry.visible !== false) || menuList[0];
     if (!menu) return [];
 
     const sectionIds = (menu.sectionIds || []).filter(Boolean);
+    note('sectionIds', sectionIds.length);
     if (!sectionIds.length) return [];
 
     const sectionsResponse = await listSections({ sectionIds });
@@ -66,6 +72,7 @@ export async function loadHighlights(wrap) {
 
     // Bolumleri menudeki siraya gore geziyoruz; listSections sirayi korumuyor.
     const orderedSections = sectionIds.map((id) => sectionById.get(id)).filter(Boolean);
+    note('sections', orderedSections.length);
 
     const itemIds = [];
     for (const section of orderedSections) {
@@ -73,12 +80,14 @@ export async function loadHighlights(wrap) {
             if (id && !itemIds.includes(id)) itemIds.push(id);
         }
     }
+    note('itemIds', itemIds.length);
     if (!itemIds.length) return [];
 
     const itemsResponse = await listItems({ itemIds, onlyVisible: true });
-    const itemById = new Map(
-        ((itemsResponse && itemsResponse.items) || []).map((item) => [item.id, item])
-    );
+    const itemList = (itemsResponse && itemsResponse.items) || [];
+    note('items', itemList.length);
+    note('eligible', itemList.filter(isEligible).length);
+    const itemById = new Map(itemList.map((item) => [item.id, item]));
 
     // Bolum basina en fazla bir urun: ana sayfada cesitlilik olsun.
     // Bolum icinde "featured" isaretli urun varsa o secilir, boylece hangi
