@@ -74,7 +74,18 @@ export async function loadHighlights(wrap, stages) {
     const sectionById = new Map(sectionList.map((s) => [s.id, s]));
 
     // Bolumleri menudeki siraya gore geziyoruz; listSections sirayi korumuyor.
-    const orderedSections = sectionIds.map((id) => sectionById.get(id)).filter(Boolean);
+    // Menudeki sirayi kullanmayi tercih ediyoruz. Id'ler eslesmezse
+    // (SDK menu.sectionIds ile bolum id'lerini farkli bicimde donduruyor
+    // olabilir) gelen sirayla devam ediyoruz - sira ideal olmasa da sayfa
+    // calisir kaliyor.
+    let orderedSections = sectionIds.map((id) => sectionById.get(id)).filter(Boolean);
+    note('matchedByMenuOrder', orderedSections.length);
+    if (!orderedSections.length) {
+        orderedSections = sectionList;
+        note('orderFallback', true);
+        note('sampleMenuSectionId', String(sectionIds[0] || ''));
+        note('sampleSectionId', String((sectionList[0] || {}).id || ''));
+    }
     note('sections', orderedSections.length);
 
     const itemIds = [];
