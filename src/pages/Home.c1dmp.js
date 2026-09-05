@@ -33,10 +33,11 @@ $w.onReady(function () {
     if (typeof app.show === 'function') app.show();
     if (typeof app.expand === 'function') app.expand();
 
-    // Iframe'in kendi kaydirma cubugu olmasin: sayfada tek scroll kalsin.
-    // Yukseklik asagidaki kz-h-* sinifiyla icerige birebir oturtuluyor.
-    app.scrolling = 'no';
-
+    // Sayfada tek kaydirma cubugu olsun diye iframe'in kendi scroll'u olmamali.
+    // Bunu `app.scrolling` ile yapmiyoruz: `src` ile ayni anda atandiginda Wix
+    // iframe'i bazen hic olusturmuyor (kapsayici bos kaliyor). Bunun yerine
+    // kz-h-* sinifi yuksekligi her zaman YUKARI yuvarliyor, boylece iframe
+    // icerikten asla kisa kalmiyor ve tasma olmadigi icin scroll cikmiyor.
     if (EMBED_URL) {
         app.src = EMBED_URL;
     }

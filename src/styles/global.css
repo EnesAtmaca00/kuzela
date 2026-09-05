@@ -195,3 +195,349 @@ html { scroll-behavior: smooth; }
   .kz-reveal,
   .kz-reveal-delay { animation: none !important; }
 }
+
+/* === Kuzela ana sayfa gomulu HTML yuksekligi (otomatik uretildi) ===
+ *
+ * Ana sayfadaki #html1 bir iframe. Wix Studio'da $w elemanlarinin height
+ * ozelligi olmadigi icin yukseklik Velo'dan atanamiyor. Bunun yerine
+ * src/pages/Home.c1dmp.js iframe'in bildirdigi icerik yuksekligini
+ * 100 piksele YUKARI yuvarlayip sayfaya kz-h-<piksel> sinifi ekliyor,
+ * yuksekligi de asagidaki kurallar uyguluyor.
+ *
+ * Seciciler #c1dmp (ana sayfa kapsayicisi) ile sinirli, bu yuzden
+ * header'daki sepet iframe'ini etkilemiyor. Yukari yuvarlama sayesinde
+ * iframe icerikten asla kisa kalmiyor: sayfada tek kaydirma cubugu var.
+ */
+
+#c1dmp:has(.kz-h-1000) wix-iframe > div,
+#c1dmp:has(.kz-h-1000) wix-iframe iframe { height: 1000px !important; }
+
+#c1dmp:has(.kz-h-1100) wix-iframe > div,
+#c1dmp:has(.kz-h-1100) wix-iframe iframe { height: 1100px !important; }
+
+#c1dmp:has(.kz-h-1200) wix-iframe > div,
+#c1dmp:has(.kz-h-1200) wix-iframe iframe { height: 1200px !important; }
+
+#c1dmp:has(.kz-h-1300) wix-iframe > div,
+#c1dmp:has(.kz-h-1300) wix-iframe iframe { height: 1300px !important; }
+
+#c1dmp:has(.kz-h-1400) wix-iframe > div,
+#c1dmp:has(.kz-h-1400) wix-iframe iframe { height: 1400px !important; }
+
+#c1dmp:has(.kz-h-1500) wix-iframe > div,
+#c1dmp:has(.kz-h-1500) wix-iframe iframe { height: 1500px !important; }
+
+#c1dmp:has(.kz-h-1600) wix-iframe > div,
+#c1dmp:has(.kz-h-1600) wix-iframe iframe { height: 1600px !important; }
+
+#c1dmp:has(.kz-h-1700) wix-iframe > div,
+#c1dmp:has(.kz-h-1700) wix-iframe iframe { height: 1700px !important; }
+
+#c1dmp:has(.kz-h-1800) wix-iframe > div,
+#c1dmp:has(.kz-h-1800) wix-iframe iframe { height: 1800px !important; }
+
+#c1dmp:has(.kz-h-1900) wix-iframe > div,
+#c1dmp:has(.kz-h-1900) wix-iframe iframe { height: 1900px !important; }
+
+#c1dmp:has(.kz-h-2000) wix-iframe > div,
+#c1dmp:has(.kz-h-2000) wix-iframe iframe { height: 2000px !important; }
+
+#c1dmp:has(.kz-h-2100) wix-iframe > div,
+#c1dmp:has(.kz-h-2100) wix-iframe iframe { height: 2100px !important; }
+
+#c1dmp:has(.kz-h-2200) wix-iframe > div,
+#c1dmp:has(.kz-h-2200) wix-iframe iframe { height: 2200px !important; }
+
+#c1dmp:has(.kz-h-2300) wix-iframe > div,
+#c1dmp:has(.kz-h-2300) wix-iframe iframe { height: 2300px !important; }
+
+#c1dmp:has(.kz-h-2400) wix-iframe > div,
+#c1dmp:has(.kz-h-2400) wix-iframe iframe { height: 2400px !important; }
+
+#c1dmp:has(.kz-h-2500) wix-iframe > div,
+#c1dmp:has(.kz-h-2500) wix-iframe iframe { height: 2500px !important; }
+
+#c1dmp:has(.kz-h-2600) wix-iframe > div,
+#c1dmp:has(.kz-h-2600) wix-iframe iframe { height: 2600px !important; }
+
+#c1dmp:has(.kz-h-2700) wix-iframe > div,
+#c1dmp:has(.kz-h-2700) wix-iframe iframe { height: 2700px !important; }
+
+#c1dmp:has(.kz-h-2800) wix-iframe > div,
+#c1dmp:has(.kz-h-2800) wix-iframe iframe { height: 2800px !important; }
+
+#c1dmp:has(.kz-h-2900) wix-iframe > div,
+#c1dmp:has(.kz-h-2900) wix-iframe iframe { height: 2900px !important; }
+
+#c1dmp:has(.kz-h-3000) wix-iframe > div,
+#c1dmp:has(.kz-h-3000) wix-iframe iframe { height: 3000px !important; }
+
+#c1dmp:has(.kz-h-3100) wix-iframe > div,
+#c1dmp:has(.kz-h-3100) wix-iframe iframe { height: 3100px !important; }
+
+#c1dmp:has(.kz-h-3200) wix-iframe > div,
+#c1dmp:has(.kz-h-3200) wix-iframe iframe { height: 3200px !important; }
+
+#c1dmp:has(.kz-h-3300) wix-iframe > div,
+#c1dmp:has(.kz-h-3300) wix-iframe iframe { height: 3300px !important; }
+
+#c1dmp:has(.kz-h-3400) wix-iframe > div,
+#c1dmp:has(.kz-h-3400) wix-iframe iframe { height: 3400px !important; }
+
+#c1dmp:has(.kz-h-3500) wix-iframe > div,
+#c1dmp:has(.kz-h-3500) wix-iframe iframe { height: 3500px !important; }
+
+#c1dmp:has(.kz-h-3600) wix-iframe > div,
+#c1dmp:has(.kz-h-3600) wix-iframe iframe { height: 3600px !important; }
+
+#c1dmp:has(.kz-h-3700) wix-iframe > div,
+#c1dmp:has(.kz-h-3700) wix-iframe iframe { height: 3700px !important; }
+
+#c1dmp:has(.kz-h-3800) wix-iframe > div,
+#c1dmp:has(.kz-h-3800) wix-iframe iframe { height: 3800px !important; }
+
+#c1dmp:has(.kz-h-3900) wix-iframe > div,
+#c1dmp:has(.kz-h-3900) wix-iframe iframe { height: 3900px !important; }
+
+#c1dmp:has(.kz-h-4000) wix-iframe > div,
+#c1dmp:has(.kz-h-4000) wix-iframe iframe { height: 4000px !important; }
+
+#c1dmp:has(.kz-h-4100) wix-iframe > div,
+#c1dmp:has(.kz-h-4100) wix-iframe iframe { height: 4100px !important; }
+
+#c1dmp:has(.kz-h-4200) wix-iframe > div,
+#c1dmp:has(.kz-h-4200) wix-iframe iframe { height: 4200px !important; }
+
+#c1dmp:has(.kz-h-4300) wix-iframe > div,
+#c1dmp:has(.kz-h-4300) wix-iframe iframe { height: 4300px !important; }
+
+#c1dmp:has(.kz-h-4400) wix-iframe > div,
+#c1dmp:has(.kz-h-4400) wix-iframe iframe { height: 4400px !important; }
+
+#c1dmp:has(.kz-h-4500) wix-iframe > div,
+#c1dmp:has(.kz-h-4500) wix-iframe iframe { height: 4500px !important; }
+
+#c1dmp:has(.kz-h-4600) wix-iframe > div,
+#c1dmp:has(.kz-h-4600) wix-iframe iframe { height: 4600px !important; }
+
+#c1dmp:has(.kz-h-4700) wix-iframe > div,
+#c1dmp:has(.kz-h-4700) wix-iframe iframe { height: 4700px !important; }
+
+#c1dmp:has(.kz-h-4800) wix-iframe > div,
+#c1dmp:has(.kz-h-4800) wix-iframe iframe { height: 4800px !important; }
+
+#c1dmp:has(.kz-h-4900) wix-iframe > div,
+#c1dmp:has(.kz-h-4900) wix-iframe iframe { height: 4900px !important; }
+
+#c1dmp:has(.kz-h-5000) wix-iframe > div,
+#c1dmp:has(.kz-h-5000) wix-iframe iframe { height: 5000px !important; }
+
+#c1dmp:has(.kz-h-5100) wix-iframe > div,
+#c1dmp:has(.kz-h-5100) wix-iframe iframe { height: 5100px !important; }
+
+#c1dmp:has(.kz-h-5200) wix-iframe > div,
+#c1dmp:has(.kz-h-5200) wix-iframe iframe { height: 5200px !important; }
+
+#c1dmp:has(.kz-h-5300) wix-iframe > div,
+#c1dmp:has(.kz-h-5300) wix-iframe iframe { height: 5300px !important; }
+
+#c1dmp:has(.kz-h-5400) wix-iframe > div,
+#c1dmp:has(.kz-h-5400) wix-iframe iframe { height: 5400px !important; }
+
+#c1dmp:has(.kz-h-5500) wix-iframe > div,
+#c1dmp:has(.kz-h-5500) wix-iframe iframe { height: 5500px !important; }
+
+#c1dmp:has(.kz-h-5600) wix-iframe > div,
+#c1dmp:has(.kz-h-5600) wix-iframe iframe { height: 5600px !important; }
+
+#c1dmp:has(.kz-h-5700) wix-iframe > div,
+#c1dmp:has(.kz-h-5700) wix-iframe iframe { height: 5700px !important; }
+
+#c1dmp:has(.kz-h-5800) wix-iframe > div,
+#c1dmp:has(.kz-h-5800) wix-iframe iframe { height: 5800px !important; }
+
+#c1dmp:has(.kz-h-5900) wix-iframe > div,
+#c1dmp:has(.kz-h-5900) wix-iframe iframe { height: 5900px !important; }
+
+#c1dmp:has(.kz-h-6000) wix-iframe > div,
+#c1dmp:has(.kz-h-6000) wix-iframe iframe { height: 6000px !important; }
+
+#c1dmp:has(.kz-h-6100) wix-iframe > div,
+#c1dmp:has(.kz-h-6100) wix-iframe iframe { height: 6100px !important; }
+
+#c1dmp:has(.kz-h-6200) wix-iframe > div,
+#c1dmp:has(.kz-h-6200) wix-iframe iframe { height: 6200px !important; }
+
+#c1dmp:has(.kz-h-6300) wix-iframe > div,
+#c1dmp:has(.kz-h-6300) wix-iframe iframe { height: 6300px !important; }
+
+#c1dmp:has(.kz-h-6400) wix-iframe > div,
+#c1dmp:has(.kz-h-6400) wix-iframe iframe { height: 6400px !important; }
+
+#c1dmp:has(.kz-h-6500) wix-iframe > div,
+#c1dmp:has(.kz-h-6500) wix-iframe iframe { height: 6500px !important; }
+
+#c1dmp:has(.kz-h-6600) wix-iframe > div,
+#c1dmp:has(.kz-h-6600) wix-iframe iframe { height: 6600px !important; }
+
+#c1dmp:has(.kz-h-6700) wix-iframe > div,
+#c1dmp:has(.kz-h-6700) wix-iframe iframe { height: 6700px !important; }
+
+#c1dmp:has(.kz-h-6800) wix-iframe > div,
+#c1dmp:has(.kz-h-6800) wix-iframe iframe { height: 6800px !important; }
+
+#c1dmp:has(.kz-h-6900) wix-iframe > div,
+#c1dmp:has(.kz-h-6900) wix-iframe iframe { height: 6900px !important; }
+
+#c1dmp:has(.kz-h-7000) wix-iframe > div,
+#c1dmp:has(.kz-h-7000) wix-iframe iframe { height: 7000px !important; }
+
+#c1dmp:has(.kz-h-7100) wix-iframe > div,
+#c1dmp:has(.kz-h-7100) wix-iframe iframe { height: 7100px !important; }
+
+#c1dmp:has(.kz-h-7200) wix-iframe > div,
+#c1dmp:has(.kz-h-7200) wix-iframe iframe { height: 7200px !important; }
+
+#c1dmp:has(.kz-h-7300) wix-iframe > div,
+#c1dmp:has(.kz-h-7300) wix-iframe iframe { height: 7300px !important; }
+
+#c1dmp:has(.kz-h-7400) wix-iframe > div,
+#c1dmp:has(.kz-h-7400) wix-iframe iframe { height: 7400px !important; }
+
+#c1dmp:has(.kz-h-7500) wix-iframe > div,
+#c1dmp:has(.kz-h-7500) wix-iframe iframe { height: 7500px !important; }
+
+#c1dmp:has(.kz-h-7600) wix-iframe > div,
+#c1dmp:has(.kz-h-7600) wix-iframe iframe { height: 7600px !important; }
+
+#c1dmp:has(.kz-h-7700) wix-iframe > div,
+#c1dmp:has(.kz-h-7700) wix-iframe iframe { height: 7700px !important; }
+
+#c1dmp:has(.kz-h-7800) wix-iframe > div,
+#c1dmp:has(.kz-h-7800) wix-iframe iframe { height: 7800px !important; }
+
+#c1dmp:has(.kz-h-7900) wix-iframe > div,
+#c1dmp:has(.kz-h-7900) wix-iframe iframe { height: 7900px !important; }
+
+#c1dmp:has(.kz-h-8000) wix-iframe > div,
+#c1dmp:has(.kz-h-8000) wix-iframe iframe { height: 8000px !important; }
+
+#c1dmp:has(.kz-h-8100) wix-iframe > div,
+#c1dmp:has(.kz-h-8100) wix-iframe iframe { height: 8100px !important; }
+
+#c1dmp:has(.kz-h-8200) wix-iframe > div,
+#c1dmp:has(.kz-h-8200) wix-iframe iframe { height: 8200px !important; }
+
+#c1dmp:has(.kz-h-8300) wix-iframe > div,
+#c1dmp:has(.kz-h-8300) wix-iframe iframe { height: 8300px !important; }
+
+#c1dmp:has(.kz-h-8400) wix-iframe > div,
+#c1dmp:has(.kz-h-8400) wix-iframe iframe { height: 8400px !important; }
+
+#c1dmp:has(.kz-h-8500) wix-iframe > div,
+#c1dmp:has(.kz-h-8500) wix-iframe iframe { height: 8500px !important; }
+
+#c1dmp:has(.kz-h-8600) wix-iframe > div,
+#c1dmp:has(.kz-h-8600) wix-iframe iframe { height: 8600px !important; }
+
+#c1dmp:has(.kz-h-8700) wix-iframe > div,
+#c1dmp:has(.kz-h-8700) wix-iframe iframe { height: 8700px !important; }
+
+#c1dmp:has(.kz-h-8800) wix-iframe > div,
+#c1dmp:has(.kz-h-8800) wix-iframe iframe { height: 8800px !important; }
+
+#c1dmp:has(.kz-h-8900) wix-iframe > div,
+#c1dmp:has(.kz-h-8900) wix-iframe iframe { height: 8900px !important; }
+
+#c1dmp:has(.kz-h-9000) wix-iframe > div,
+#c1dmp:has(.kz-h-9000) wix-iframe iframe { height: 9000px !important; }
+
+#c1dmp:has(.kz-h-9100) wix-iframe > div,
+#c1dmp:has(.kz-h-9100) wix-iframe iframe { height: 9100px !important; }
+
+#c1dmp:has(.kz-h-9200) wix-iframe > div,
+#c1dmp:has(.kz-h-9200) wix-iframe iframe { height: 9200px !important; }
+
+#c1dmp:has(.kz-h-9300) wix-iframe > div,
+#c1dmp:has(.kz-h-9300) wix-iframe iframe { height: 9300px !important; }
+
+#c1dmp:has(.kz-h-9400) wix-iframe > div,
+#c1dmp:has(.kz-h-9400) wix-iframe iframe { height: 9400px !important; }
+
+#c1dmp:has(.kz-h-9500) wix-iframe > div,
+#c1dmp:has(.kz-h-9500) wix-iframe iframe { height: 9500px !important; }
+
+#c1dmp:has(.kz-h-9600) wix-iframe > div,
+#c1dmp:has(.kz-h-9600) wix-iframe iframe { height: 9600px !important; }
+
+#c1dmp:has(.kz-h-9700) wix-iframe > div,
+#c1dmp:has(.kz-h-9700) wix-iframe iframe { height: 9700px !important; }
+
+#c1dmp:has(.kz-h-9800) wix-iframe > div,
+#c1dmp:has(.kz-h-9800) wix-iframe iframe { height: 9800px !important; }
+
+#c1dmp:has(.kz-h-9900) wix-iframe > div,
+#c1dmp:has(.kz-h-9900) wix-iframe iframe { height: 9900px !important; }
+
+#c1dmp:has(.kz-h-10000) wix-iframe > div,
+#c1dmp:has(.kz-h-10000) wix-iframe iframe { height: 10000px !important; }
+
+#c1dmp:has(.kz-h-10100) wix-iframe > div,
+#c1dmp:has(.kz-h-10100) wix-iframe iframe { height: 10100px !important; }
+
+#c1dmp:has(.kz-h-10200) wix-iframe > div,
+#c1dmp:has(.kz-h-10200) wix-iframe iframe { height: 10200px !important; }
+
+#c1dmp:has(.kz-h-10300) wix-iframe > div,
+#c1dmp:has(.kz-h-10300) wix-iframe iframe { height: 10300px !important; }
+
+#c1dmp:has(.kz-h-10400) wix-iframe > div,
+#c1dmp:has(.kz-h-10400) wix-iframe iframe { height: 10400px !important; }
+
+#c1dmp:has(.kz-h-10500) wix-iframe > div,
+#c1dmp:has(.kz-h-10500) wix-iframe iframe { height: 10500px !important; }
+
+#c1dmp:has(.kz-h-10600) wix-iframe > div,
+#c1dmp:has(.kz-h-10600) wix-iframe iframe { height: 10600px !important; }
+
+#c1dmp:has(.kz-h-10700) wix-iframe > div,
+#c1dmp:has(.kz-h-10700) wix-iframe iframe { height: 10700px !important; }
+
+#c1dmp:has(.kz-h-10800) wix-iframe > div,
+#c1dmp:has(.kz-h-10800) wix-iframe iframe { height: 10800px !important; }
+
+#c1dmp:has(.kz-h-10900) wix-iframe > div,
+#c1dmp:has(.kz-h-10900) wix-iframe iframe { height: 10900px !important; }
+
+#c1dmp:has(.kz-h-11000) wix-iframe > div,
+#c1dmp:has(.kz-h-11000) wix-iframe iframe { height: 11000px !important; }
+
+#c1dmp:has(.kz-h-11100) wix-iframe > div,
+#c1dmp:has(.kz-h-11100) wix-iframe iframe { height: 11100px !important; }
+
+#c1dmp:has(.kz-h-11200) wix-iframe > div,
+#c1dmp:has(.kz-h-11200) wix-iframe iframe { height: 11200px !important; }
+
+#c1dmp:has(.kz-h-11300) wix-iframe > div,
+#c1dmp:has(.kz-h-11300) wix-iframe iframe { height: 11300px !important; }
+
+#c1dmp:has(.kz-h-11400) wix-iframe > div,
+#c1dmp:has(.kz-h-11400) wix-iframe iframe { height: 11400px !important; }
+
+#c1dmp:has(.kz-h-11500) wix-iframe > div,
+#c1dmp:has(.kz-h-11500) wix-iframe iframe { height: 11500px !important; }
+
+#c1dmp:has(.kz-h-11600) wix-iframe > div,
+#c1dmp:has(.kz-h-11600) wix-iframe iframe { height: 11600px !important; }
+
+#c1dmp:has(.kz-h-11700) wix-iframe > div,
+#c1dmp:has(.kz-h-11700) wix-iframe iframe { height: 11700px !important; }
+
+#c1dmp:has(.kz-h-11800) wix-iframe > div,
+#c1dmp:has(.kz-h-11800) wix-iframe iframe { height: 11800px !important; }
+
+#c1dmp:has(.kz-h-11900) wix-iframe > div,
+#c1dmp:has(.kz-h-11900) wix-iframe iframe { height: 11900px !important; }
+
+#c1dmp:has(.kz-h-12000) wix-iframe > div,
+#c1dmp:has(.kz-h-12000) wix-iframe iframe { height: 12000px !important; }
