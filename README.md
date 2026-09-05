@@ -43,3 +43,35 @@ Learn more about [working with the Wix CLI](https://support.wix.com/en/article/v
 
 ## Invite contributors to work with you
 Git Integration & Wix CLI extends Editor X's [concurrent editing](https://support.wix.com/en/article/editor-x-about-concurrent-editing) capabilities. Invite other developers as collaborators on your [site](https://support.wix.com/en/article/inviting-people-to-contribute-to-your-site) and your [GitHub repo](https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-access-to-your-personal-repositories/inviting-collaborators-to-a-personal-repository). Multiple developers can work on a site's code at once.
+
+## Ana sayfa (Home) nasil calisiyor
+
+Ana sayfada tek bir eleman var: `#html1` (HtmlComponent, yani bir iframe).
+Sayfadaki butun tasarim bu iframe'in icinde.
+
+- **Iframe icerigi:** `docs/index.html`. Bu dosya GitHub Pages ile
+  <https://enesatmaca00.github.io/kuzela/> adresinden yayinlaniyor ve
+  `src/pages/Home.c1dmp.js` iframe'i calisma aninda oraya yonlendiriyor.
+  **Iceriği degistirmek icin `docs/index.html` duzenlenip push edilir;
+  Wix editorune kod yapistirmaya gerek yok.**
+- **Yukseklik:** Wix Studio'da `$w` elemanlarinin `height` ozelligi yok,
+  yani iframe yuksekligi Velo'dan atanamiyor. Bunun yerine iframe kendi
+  icerik yuksekligini `postMessage` ile bildiriyor, sayfa kodu bunu 100
+  piksele yukari yuvarlayip sayfaya `kz-h-<piksel>` sinifi ekliyor ve
+  `src/styles/global.css` icindeki uretilmis kurallar yuksekligi
+  uyguluyor. Yukari yuvarlandigi icin icerik asla kesilmiyor ve iframe'in
+  kendi kaydirma cubugu olusmuyor (sayfada tek scroll).
+- **CSS secicileri:** Wix custom CSS'te yazdiginiz her sinif ve ID'nin
+  basina `wixui-` ekleniyor. Siniflar icin sorun degil (Wix her iki adi da
+  elemana koyuyor) ama **ID secici kullanilamaz** (`#c1dmp` ->
+  `#wixui-c1dmp`, hicbir seye uymaz). Bu yuzden kurallar
+  `.page.kz-h-N ~ div .section ...` bicimindeki kardes seciciyi kullaniyor.
+- **Fiyatlar** sitenin kendi Online Siparisler sayfasindaki menuyle
+  dogrulandi (Eylul 2026).
+
+### Bilinen kisit
+
+Wix, HtmlComponent iframe'ini ancak ziyaretci sayfayla etkilesime
+girdiginde (kaydirma/dokunma) yukluyor. Bu yuzden ana sayfa ilk anda bos
+gorunuyor. Bu Wix'in kendi davranisi; kalici cozumu tasarimi iframe yerine
+gercek Wix bolumlerine veya bir Custom Element'e tasimak.
