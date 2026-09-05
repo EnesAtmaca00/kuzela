@@ -215,6 +215,27 @@ html { scroll-behavior: smooth; }
  *    dokunmuyor. Onizleme DOM'unda dogrulandi.
  */
 
+/* Bolum ve ara kapsayicilar icerige sarilsin.
+ *
+ * Bunlar olmadan: asagidaki kurallar sadece iframe'i boyutlandiriyor, ama
+ * bileseni saran kutular editorden gelen SABIT yuksekligi koruyor. Iframe
+ * ondan buyukse kutu buyuyor, kucukse kutu oldugu yerde kaliyor ve altta
+ * kocaman bir bosluk olusuyor (768px'te kapsayici 9250px, icerik 4800px).
+ * Masaustunde fark edilmiyordu cunku orada editor yuksekligi icerikten
+ * kucuk. Bu yuzden dar ekranda sayfa alt bilgiye yapismiyordu.
+ *
+ * kz-embed-page sinifini Home.c1dmp.js her zaman ekliyor, yani bu blok
+ * yalnizca ana sayfada calisiyor; diger sayfalarin uygulama iframe'lerine
+ * (sepet, odeme, siparis) dokunmuyor.
+ */
+.page.kz-embed-page ~ div .section:has(wix-iframe),
+.page.kz-embed-page ~ div .section:has(wix-iframe) > div,
+.page.kz-embed-page ~ div .section:has(wix-iframe) > div > div,
+.page.kz-embed-page ~ div .section div:has(> wix-iframe) {
+  height: auto !important;
+  min-height: 0 !important;
+}
+
 .page.kz-h-1000 ~ div .section wix-iframe > div,
 .page.kz-h-1000 ~ div .section wix-iframe iframe { height: 1000px !important; }
 

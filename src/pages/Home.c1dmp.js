@@ -1,4 +1,5 @@
 import wixWindow from 'wix-window';
+import { getHighlights } from 'backend/menu.web';
 
 /*
  * Ana sayfa tek bir HtmlComponent'ten (#html1) olusuyor.
@@ -33,6 +34,15 @@ $w.onReady(function () {
     if (typeof app.show === 'function') app.show();
     if (typeof app.expand === 'function') app.expand();
 
+    // global.css'teki "kapsayicilar icerige sarilsin" blogu bu sinifa bakiyor.
+    // Olmazsa dar ekranda bolum, editorden gelen sabit yuksekligi koruyup
+    // sayfanin altinda kocaman bir bosluk birakiyor.
+    try {
+        page.customClassList.add('kz-embed-page');
+    } catch (error) {
+        // customClassList her breakpoint'te hazir olmayabilir.
+    }
+
     // Sayfada tek kaydirma cubugu olsun diye iframe'in kendi scroll'u olmamali.
     // Bunu `app.scrolling` ile yapmiyoruz: `src` ile ayni anda atandiginda Wix
     // iframe'i bazen hic olusturmuyor (kapsayici bos kaliyor). Bunun yerine
@@ -57,9 +67,40 @@ $w.onReady(function () {
         }
     }
 
+    // Urun kartlarinin verisi Wix Restaurants menusunden geliyor.
+    // Iframe baska bir origin'de oldugu icin Wix API'lerini kendisi
+    // cagiramiyor; veriyi burada okuyup postMessage ile gonderiyoruz.
+    let products = null;
+    let iframeAlive = false;
+
+    function pushProducts() {
+        if (!iframeAlive || !products || !products.length) return;
+        try {
+            app.postMessage({ type: 'kuzelaProducts', items: products });
+        } catch (error) {
+            // Iframe henuz hazir degilse bir sonraki mesajinda tekrar denenecek.
+        }
+    }
+
+    getHighlights()
+        .then((list) => {
+            if (!Array.isArray(list) || !list.length) return;
+            products = list;
+            pushProducts();
+        })
+        .catch(() => {
+            // Menu okunamazsa iframe kendi yedek listesini gostermeye devam eder.
+        });
+
     app.onMessage((event) => {
         const data = event.data;
         if (!data || typeof data !== 'object') return;
+
+        // Iframe'den herhangi bir mesaj gelmesi yuklendigini kanitliyor.
+        iframeAlive = true;
+        pushProducts();
+
+        if (data.type === 'kuzelaReady') return;
 
         if (data.type === 'kuzelaHomeHeight') {
             const height = Number(data.height);

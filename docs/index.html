@@ -17,25 +17,46 @@
 const ORDER_URL = 'https://nepagy.wixstudio.com/my-site-2/online-ordering';
 const ABOUT_URL = 'https://nepagy.wixstudio.com/my-site-2/over-ons';
 
-const products = [
-  ['Poké Bowl Medium', 'Stel zelf je poké bowl samen', '€12.00', '7279ae_52a6f8b25760418c9a5e142710023d92~mv2.jpg'],
-  ['Kip Spicy Quesadillas', 'Kip spicy · kaas · gegrild', '€12.00', '7279ae_a4140ebf5c2d45449af95f04135ebdd6~mv2.jpg'],
-  ['Honey BBQ Wings 8st', '8 st · optioneel met rijst', '€11.00', '7279ae_19b63a8c65ac487b9ba033d2ff0baeb7~mv2.png'],
-  ['Wrap Kip Spicy', 'Kip spicy · vers gerold', '€9.50', '7279ae_05f19c04217a4256b380778535b53ed8~mv2.png'],
-  ['Calamares 6st', '6 stuks · krokant', '€7.00', '7279ae_7f340f6097b24c93a9ff63d58aaacf08~mv2.jpg'],
-  ["Mini Loempia's 10st", '10 stuks · sweet chilli', '€5.00', '7279ae_7bac18e268934a5f9093b3fc807d8d75~mv2.jpg']
+/*
+ * Urun kartlari artik Wix Restaurants menusunden geliyor: sayfa kodu
+ * (Home.c1dmp.js) menuyu okuyup buraya postMessage ile gonderiyor.
+ * Asagidaki liste yalnizca YEDEK - menu okunamazsa sayfa bos kalmasin diye.
+ * Fiyatlari elle guncelleme; menu paneli tek dogru kaynak.
+ */
+const FALLBACK_PRODUCTS = [
+  { name: 'Poké Bowl Medium', note: 'Stel zelf je poké bowl samen', price: '€12.00', image: 'https://static.wixstatic.com/media/7279ae_52a6f8b25760418c9a5e142710023d92~mv2.jpg' },
+  { name: 'Kip Spicy Quesadillas', note: 'Kip spicy · kaas · gegrild', price: '€12.00', image: 'https://static.wixstatic.com/media/7279ae_a4140ebf5c2d45449af95f04135ebdd6~mv2.jpg' },
+  { name: 'Honey BBQ Wings 8st', note: '8 st · optioneel met rijst', price: '€11.00', image: 'https://static.wixstatic.com/media/7279ae_19b63a8c65ac487b9ba033d2ff0baeb7~mv2.png' },
+  { name: 'Wrap Kip Spicy', note: 'Kip spicy · vers gerold', price: '€9.50', image: 'https://static.wixstatic.com/media/7279ae_05f19c04217a4256b380778535b53ed8~mv2.png' },
+  { name: 'Calamares 6st', note: '6 stuks · krokant', price: '€7.00', image: 'https://static.wixstatic.com/media/7279ae_7f340f6097b24c93a9ff63d58aaacf08~mv2.jpg' },
+  { name: "Mini Loempia's 10st", note: '10 stuks · sweet chilli', price: '€5.00', image: 'https://static.wixstatic.com/media/7279ae_7bac18e268934a5f9093b3fc807d8d75~mv2.jpg' }
 ];
 
-const cards = products.map(([name, note, price, image], index) => `
-  <article class="product reveal" style="--delay:${index * 70}ms">
+// Isimler ve aciklamalar menu panelinden geliyor, yani HTML'e gomulmeden
+// once kacislanmasi gerekiyor.
+const escapeHtml = (value) => String(value == null ? '' : value)
+  .replace(/&/g, '&amp;')
+  .replace(/</g, '&lt;')
+  .replace(/>/g, '&gt;')
+  .replace(/"/g, '&quot;')
+  .replace(/'/g, '&#39;');
+
+function cardsHtml(list, revealed) {
+  return list.map((item, index) => {
+    const name = escapeHtml(item.name);
+    const alt = escapeHtml(item.alt || `${item.name} bij Kuzela The Bowl House`);
+    return `
+  <article class="product reveal${revealed ? ' visible' : ''}" style="--delay:${index * 70}ms">
     <a href="${ORDER_URL}" target="_top" aria-label="Bestel ${name}">
       <div class="photo">
-        <img src="https://static.wixstatic.com/media/${image}" alt="${name} bij Kuzela The Bowl House" loading="lazy">
-        <span>0${index + 1}</span>
+        <img src="${escapeHtml(item.image)}" alt="${alt}" loading="lazy">
+        <span>${String(index + 1).padStart(2, '0')}</span>
       </div>
-      <div class="product-copy"><div><h3>${name}</h3><p>${note}</p></div><strong>${price}</strong></div>
+      <div class="product-copy"><div><h3>${name}</h3><p>${escapeHtml(item.note)}</p></div><strong>${escapeHtml(item.price)}</strong></div>
     </a>
-  </article>`).join('');
+  </article>`;
+  }).join('');
+}
 
 class KuzelaHome extends HTMLElement {
   connectedCallback() {
@@ -51,7 +72,7 @@ class KuzelaHome extends HTMLElement {
         .ticker{display:flex;width:max-content;padding:20px 0;background:var(--lime);border-block:1px solid var(--ink);animation:ticker 24s linear infinite}.ticker span{padding-right:42px;font-size:clamp(22px,2.8vw,44px);font-weight:900;letter-spacing:-.045em;white-space:nowrap}.ticker i{padding-left:42px;font-family:Georgia,serif;font-weight:400}@keyframes ticker{to{transform:translateX(-50%)}}
         .intro{display:grid;grid-template-columns:.72fr 1.28fr;gap:clamp(44px,7vw,120px);padding-block:clamp(84px,10vw,150px)}.intro h2,.menu-head h2,.story h2,.location h2{margin-bottom:0;font-size:clamp(46px,6.6vw,104px);font-weight:850;letter-spacing:-.072em;line-height:.88;text-wrap:balance}.intro-copy{align-self:end}.intro-copy p{max-width:610px;margin-bottom:34px;font-size:clamp(18px,1.8vw,25px);line-height:1.55}
         .proofs{display:grid;grid-template-columns:repeat(3,1fr);border-block:1px solid var(--line)}.proof{min-height:230px;padding:38px clamp(24px,4vw,60px);border-right:1px solid var(--line)}.proof:last-child{border-right:0}.proof span{display:block;margin-bottom:56px;font-size:12px;font-weight:850;letter-spacing:.16em}.proof h3{margin-bottom:12px;font-size:clamp(24px,2.4vw,38px);letter-spacing:-.045em}.proof p{margin:0;max-width:34ch;color:rgba(17,18,15,.68);line-height:1.55}
-        .menu{padding-block:clamp(84px,10vw,150px);background:var(--white)}.menu-head{display:flex;align-items:end;justify-content:space-between;gap:48px;margin-bottom:60px}.menu-head h2{max-width:800px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}.product{border:1px solid var(--line);border-radius:28px;overflow:hidden;background:var(--paper);transition:transform .55s cubic-bezier(.22,1,.36,1),box-shadow .55s}.product:hover{transform:translateY(-10px);box-shadow:0 28px 70px rgba(18,18,14,.14)}.photo{position:relative;aspect-ratio:4/3;overflow:hidden;background:var(--paper2)}.photo img{height:100%;object-fit:cover;transition:transform .8s cubic-bezier(.22,1,.36,1)}.product:hover img{transform:scale(1.045)}.photo span{position:absolute;top:18px;left:18px;display:grid;place-items:center;width:46px;height:46px;border-radius:50%;background:var(--lime);font-size:12px;font-weight:900}.product-copy{display:flex;align-items:start;justify-content:space-between;gap:20px;padding:25px}.product-copy h3{margin-bottom:7px;font-size:clamp(20px,1.8vw,29px);letter-spacing:-.045em;line-height:1}.product-copy p{margin:0;color:rgba(17,18,15,.62);font-size:14px;line-height:1.4}.product-copy strong{flex:none;font-size:17px}
+        .menu{padding-block:clamp(84px,10vw,150px);background:var(--white)}.menu-head{display:flex;align-items:end;justify-content:space-between;gap:48px;margin-bottom:60px}.menu-head h2{max-width:800px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}.product{border:1px solid var(--line);border-radius:28px;overflow:hidden;background:var(--paper);transition:transform .55s cubic-bezier(.22,1,.36,1),box-shadow .55s}.product:hover{transform:translateY(-10px);box-shadow:0 28px 70px rgba(18,18,14,.14)}.photo{position:relative;aspect-ratio:4/3;overflow:hidden;background:var(--paper2)}.photo img{height:100%;object-fit:cover;transition:transform .8s cubic-bezier(.22,1,.36,1)}.product:hover img{transform:scale(1.045)}.photo span{position:absolute;top:18px;left:18px;display:grid;place-items:center;width:46px;height:46px;border-radius:50%;background:var(--lime);font-size:12px;font-weight:900}.product-copy{display:flex;align-items:start;justify-content:space-between;gap:20px;padding:25px}.product-copy h3{margin-bottom:7px;font-size:clamp(20px,1.8vw,29px);letter-spacing:-.045em;line-height:1}.product-copy p{margin:0;color:rgba(17,18,15,.62);font-size:14px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.product-copy strong{flex:none;font-size:17px}
         .story{display:grid;grid-template-columns:1.08fr .92fr;min-height:720px;background:var(--ink);color:var(--white)}.story-media{min-height:560px;background:linear-gradient(180deg,transparent 62%,rgba(0,0,0,.35)),url('https://static.wixstatic.com/media/7279ae_1ebe510677b948b7aefb6c46fd06f577~mv2.jpg') center/cover no-repeat}.story-copy{display:flex;flex-direction:column;justify-content:space-between;gap:40px;padding:clamp(48px,6vw,96px)}.story h2{font-size:clamp(44px,5.8vw,92px)}.story-bottom{max-width:550px}.story-bottom p{color:rgba(255,255,255,.72);font-size:19px;line-height:1.6}
         .location{padding-block:clamp(90px,11vw,170px);background:var(--orange)}.location-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:70px;align-items:end}.location h2{max-width:900px}.location-card{padding:36px;border:1px solid var(--ink);border-radius:28px;background:rgba(255,255,255,.18)}.location-card p{margin-bottom:9px;font-size:18px}.location-card strong{display:block;margin:28px 0;font-size:clamp(28px,3vw,46px);letter-spacing:-.05em;line-height:1}
         .closing{padding:clamp(80px,9vw,140px) 24px;text-align:center;background:var(--lime)}.closing h2{max-width:1200px;margin:0 auto 42px;font-size:clamp(56px,9vw,140px);font-weight:900;letter-spacing:-.085em;line-height:.82}.closing .pill{min-height:58px;padding-inline:34px}footer{display:flex;justify-content:space-between;gap:30px;padding:36px clamp(24px,5vw,80px);background:var(--ink);color:rgba(255,255,255,.66);font-size:13px}footer strong{color:var(--white)}
@@ -138,7 +159,7 @@ class KuzelaHome extends HTMLElement {
         <div class="ticker" aria-hidden="true"><span>VERS GEMAAKT <i>·</i> JIJ KIEST <i>·</i> VOL SMAAK <i>·</i> LAAKDAL <i>·</i></span><span>VERS GEMAAKT <i>·</i> JIJ KIEST <i>·</i> VOL SMAAK <i>·</i> LAAKDAL <i>·</i></span></div>
         <section class="intro wrap" id="over"><div><p class="eyebrow">KUZELA THE BOWL HOUSE</p><h2>Geen standaard fastfood.</h2></div><div class="intro-copy reveal"><p>Goede ingrediënten, stevige porties en combinaties die je zelf samenstelt. Eenvoudig bestellen, vers bereid en precies zoals jij het wilt.</p><a class="pill dark" href="#menu">Waar heb je zin in?</a></div></section>
         <section class="proofs"><article class="proof"><span>01</span><h3>Jij kiest</h3><p>Stel je eigen bowl samen of kies een vaste favoriet.</p></article><article class="proof"><span>02</span><h3>Wij maken</h3><p>Je bestelling wordt pas bereid wanneer jij bestelt.</p></article><article class="proof"><span>03</span><h3>Direct genieten</h3><p>Afhalen of bezorgen: kies wat voor jou het makkelijkst is.</p></article></section>
-        <section class="menu" id="menu"><div class="wrap"><div class="menu-head"><div><p class="eyebrow">POPULAIRE KEUZES</p><h2>Vandaag op je verlanglijst.</h2></div><a class="pill dark" href="${ORDER_URL}" target="_top">Bekijk alles</a></div><div class="grid">${cards}</div></div></section>
+        <section class="menu" id="menu"><div class="wrap"><div class="menu-head"><div><p class="eyebrow">POPULAIRE KEUZES</p><h2>Vandaag op je verlanglijst.</h2></div><a class="pill dark" href="${ORDER_URL}" target="_top">Bekijk alles</a></div><div class="grid">${cardsHtml(FALLBACK_PRODUCTS, false)}</div></div></section>
         <section class="story"><div class="story-media" role="img" aria-label="Vers broodje van Kuzela"></div><div class="story-copy"><div><p class="eyebrow">OVER KUZELA</p><h2>Simpel voelt. Allesbehalve simpel smaakt.</h2></div><div class="story-bottom"><p>Midden in Laakdal maken we eten zonder gedoe: uitgesproken smaken, verse ingrediënten en genoeg keuze voor ieder moment.</p><a class="pill lime" href="${ABOUT_URL}" target="_top">Proef Kuzela</a></div></div></section>
         <section class="location" id="locatie"><div class="wrap location-grid"><div><p class="eyebrow">KOM LANGS</p><h2>Jouw volgende bowl wacht in Laakdal.</h2></div><aside class="location-card"><p>Kuzela The Bowl House</p><strong>Markt 23<br>2430 Laakdal</strong><p>Afhalen en bezorging beschikbaar.</p></aside></div></section>
         <section class="closing"><p class="eyebrow">KLAAR OM TE KIEZEN?</p><h2>Bestel. Proef. Herhaal.</h2><a class="pill dark" href="${ORDER_URL}" target="_top">Bestel bij Kuzela</a></section>
@@ -201,11 +222,32 @@ class KuzelaHome extends HTMLElement {
     // Yukseklik degismediyse mesaj gonderilmiyor, maliyeti yok denecek kadar az.
     setInterval(() => sendHeight(false), 1000);
 
-    // Wix tarafindan "yuksekligi tekrar gonder" istegi gelirse
+    /* ---------- menuden gelen urun verisi ---------- */
+    const grid = root.querySelector('.grid');
+
+    const applyProducts = (list) => {
+      if (!grid || !Array.isArray(list) || !list.length) return;
+      // Kartlar zaten gorunur olarak ciziliyor: veri sonradan geldigi icin
+      // reveal animasyonunu bastan oynatmak yerine dogrudan yerine koyuyoruz.
+      grid.innerHTML = cardsHtml(list.slice(0, 8), true);
+      grid.querySelectorAll('img').forEach((img) => {
+        img.addEventListener('load', queueSend);
+        img.addEventListener('error', queueSend);
+      });
+      sendHeight(true);
+    };
+
     window.addEventListener('message', (event) => {
       const data = event.data;
-      if (data && data.type === 'kuzelaAskHeight') sendHeight(true);
+      if (!data || typeof data !== 'object') return;
+      if (data.type === 'kuzelaAskHeight') sendHeight(true);
+      if (data.type === 'kuzelaProducts') applyProducts(data.items);
     });
+
+    // Sayfa kodu, iframe hazir olmadan urunleri gondermis olabilir.
+    // "Hazirim" diyerek verinin bize itilmesini istiyoruz.
+    const announceReady = () => window.parent.postMessage({ type: 'kuzelaReady' }, '*');
+    [0, 300, 1000, 2500].forEach((ms) => setTimeout(announceReady, ms));
 
     /* ---------- sayfa ici linkler (shadow DOM icinde otomatik calismaz) ---------- */
     root.querySelectorAll('a[href^="#"]').forEach((link) => {
