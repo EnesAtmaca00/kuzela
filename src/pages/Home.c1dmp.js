@@ -83,13 +83,18 @@ $w.onReady(function () {
     }
 
     getHighlights()
-        .then((list) => {
-            if (!Array.isArray(list) || !list.length) return;
+        .then((result) => {
+            const list = (result && result.items) || [];
+            if (!list.length) {
+                // Yedek liste gosterilecek; sebebi sessizce kaybolmasin.
+                console.warn('[kuzela] menu okunamadi:', (result && result.errors) || result);
+                return;
+            }
             products = list;
             pushProducts();
         })
-        .catch(() => {
-            // Menu okunamazsa iframe kendi yedek listesini gostermeye devam eder.
+        .catch((error) => {
+            console.warn('[kuzela] menu cagrisi basarisiz:', (error && error.message) || error);
         });
 
     app.onMessage((event) => {

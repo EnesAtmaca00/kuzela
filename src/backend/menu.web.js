@@ -17,13 +17,17 @@ const WRAPPERS = [
 ];
 
 export const getHighlights = webMethod(Permissions.Anyone, async () => {
-    for (const [, wrap] of WRAPPERS) {
+    const errors = [];
+    for (const [label, wrap] of WRAPPERS) {
         try {
-            const cards = await loadHighlights(wrap);
-            if (cards.length) return cards;
+            const items = await loadHighlights(wrap);
+            if (items.length) return { items, errors, used: label };
+            errors.push(`${label}: bos sonuc`);
         } catch (error) {
-            // Sonraki sarmalayiciyi dene.
+            // Hata yutulmuyor: menu okunamadiginda sebebini sayfa kodu
+            // konsola yaziyor, yoksa kartlar sessizce yedek listede kaliyor.
+            errors.push(`${label}: ${(error && error.message) || error}`);
         }
     }
-    return [];
+    return { items: [], errors, used: null };
 });
