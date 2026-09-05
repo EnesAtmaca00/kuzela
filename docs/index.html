@@ -178,6 +178,9 @@ class KuzelaHome extends HTMLElement {
     const host = this;
     let lastHeight = 0;
     let queueTimer = null;
+    // Kartlar menuden mi geldi yoksa yedek listeden mi? Yukseklik mesajiyla
+    // birlikte bildiriliyor, boylece disaridan dogrulanabiliyor.
+    let productSource = 'fallback';
 
     // NOT: documentElement/body scrollHeight kullanilmiyor. Onlar iframe'in mevcut
     // yuksekligi kadar buyuk kaliyor ve yukseklik bir daha asla kuculmuyor.
@@ -192,7 +195,7 @@ class KuzelaHome extends HTMLElement {
       if (!height) return;
       if (!force && Math.abs(height - lastHeight) < 2) return;
       lastHeight = height;
-      window.parent.postMessage({ type: 'kuzelaHomeHeight', height }, '*');
+      window.parent.postMessage({ type: 'kuzelaHomeHeight', height, productSource }, '*');
     };
 
     // requestAnimationFrame kullanmiyoruz: sekme arka plana dusunce callback hic
@@ -230,6 +233,7 @@ class KuzelaHome extends HTMLElement {
       // Kartlar zaten gorunur olarak ciziliyor: veri sonradan geldigi icin
       // reveal animasyonunu bastan oynatmak yerine dogrudan yerine koyuyoruz.
       grid.innerHTML = cardsHtml(list.slice(0, 8), true);
+      productSource = 'menu';
       grid.querySelectorAll('img').forEach((img) => {
         img.addEventListener('load', queueSend);
         img.addEventListener('error', queueSend);
