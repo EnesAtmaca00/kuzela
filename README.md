@@ -75,3 +75,42 @@ Wix, HtmlComponent iframe'ini ancak ziyaretci sayfayla etkilesime
 girdiginde (kaydirma/dokunma) yukluyor. Bu yuzden ana sayfa ilk anda bos
 gorunuyor. Bu Wix'in kendi davranisi; kalici cozumu tasarimi iframe yerine
 gercek Wix bolumlerine veya bir Custom Element'e tasimak.
+
+## Urun kartlari nereden geliyor
+
+Ana sayfadaki alti kart artik elle yazilmiyor, **Wix Restaurants menusunden**
+geliyor. Menude fiyat/ad/gorsel degisince ana sayfa da degisir.
+
+Zincir: `src/backend/menu-data.js` menuyu okur -> `src/backend/menu.web.js`
+yukseltilmis izinle cagirir -> `src/pages/Home.c1dmp.js` sonucu iframe'e
+`postMessage` ile gonderir -> `docs/index.html` kartlari yeniden cizer.
+Iframe baska bir origin'de oldugu icin Wix API'lerini kendisi cagiramaz.
+
+**Hangi urunler secilir:** bolum basina en fazla bir urun, menudeki sirayla.
+Bolumde `featured` isaretli urun varsa o secilir. Gorseli veya fiyati olmayan
+urunler atlanir (kart bozuk gorunmesin diye).
+
+Yani kontrol sende:
+- Bir urunu one cikarmak icin menu panelinde **Featured** isaretle.
+- Bir bolum hic cikmiyorsa, o bolumdeki urunlerin **gorseli yoktur** - menude
+  gorsel ekleyince otomatik girer. (Su an Wings ve Desserts boyle.)
+
+Menu okunamazsa `docs/index.html` icindeki yedek liste gosterilir ve sebep
+tarayici konsoluna `[kuzela]` etiketiyle yazilir.
+
+### Bu SDK'nin surprizleri
+
+Islerken karsilasilan, belgelerde yazmayan davranislar:
+- `listSections({ sectionIds })` ve `listItems({ itemIds })` **bos donuyor**.
+  Filtresiz cekip id ile eslestirmek gerekiyor.
+- Bolumler `id` alani **olmadan** donuyor, bu yuzden menunun `sectionIds`
+  sirasi ile eslestirme tutmuyor; gelen sira kullaniliyor.
+- `image` REST'te `{url}` nesnesi ama SDK'da duz medya kimligi (string).
+  Ucuncu bir bicim olarak `wix:image://` de gelebiliyor.
+- `priceInfo.formattedPrice` her zaman gelmiyor; `price` ham deger olarak var.
+
+### Tiklama
+
+Wix Restaurants urun basina URL uretmiyor (siparis sayfasinda urune tiklayinca
+adres degismiyor, modal aciliyor). Bu yuzden kartlar siparis sayfasina
+goturuyor, tek bir urune degil.
