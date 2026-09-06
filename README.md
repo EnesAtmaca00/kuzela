@@ -114,3 +114,20 @@ Islerken karsilasilan, belgelerde yazmayan davranislar:
 Wix Restaurants urun basina URL uretmiyor (siparis sayfasinda urune tiklayinca
 adres degismiyor, modal aciliyor). Bu yuzden kartlar siparis sayfasina
 goturuyor, tek bir urune degil.
+
+### Tiklama neden sayfa kodundan geciyor
+
+Kartlar `target="_top"` ile calisiyordu ama Wix'in gomulu iframe'i sandbox'li:
+ust pencereye gitmeye izin verilmiyor ve tiklayinca hicbir sey olmuyordu.
+Iframe artik tiklamayi yakalayip `kuzelaNavigate` mesaji gonderiyor, gezinmeyi
+`Home.c1dmp.js` yapiyor ve yalnizca bu sitenin adreslerini kabul ediyor.
+Sayfa tek basina acildiginda normal gezinme calismaya devam ediyor.
+
+### Bolum yuksekligi neden zincirin tamamina yaziliyor
+
+Bolumun `min-height`'i editorde breakpoint basina sabit (orn. <=900px icin
+9250px) ve bilesen `place-self: stretch` ile o yukseklige yayiliyor. Sadece
+iframe'i boyutlandirmak kutuyu buyutebiliyor ama kucultemiyordu; dar ekranda
+sayfanin altinda binlerce piksel bosluk kaliyordu. `min-height: 0` ve
+`height: auto` de ise yaramadi (canli sayfada olculdu), bu yuzden olculen
+yukseklik bolum, ara kapsayicilar, bilesen ve iframe'e aciktan yaziliyor.
