@@ -114,6 +114,9 @@ $w.onReady(function () {
                 console.warn('[kuzela] menu okunamadi:', (result && result.errors) || result);
                 return;
             }
+            // Teshis: hangi kod surumunun yayinda oldugu ve secimin nasil
+            // yapildigi gorunsun (bolum sirasi tutmazsa secim rastgelelesiyor).
+            console.log('[kuzela] menu yuklendi:', result.used, JSON.stringify(result.stages || {}));
             products = list;
             pushProducts();
         })

@@ -204,5 +204,7 @@ export async function loadHighlights(wrap, stages) {
     }
 
     note('picked', picked.length);
+    note('pref', PREFERRED_ITEM_NAMES.join(','));
+    note('names', picked.map((i) => i.name).join(' | '));
     return picked.map(toCard);
 }

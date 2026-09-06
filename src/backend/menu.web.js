@@ -22,7 +22,7 @@ export const getHighlights = webMethod(Permissions.Anyone, async () => {
         const stages = {};
         try {
             const items = await loadHighlights(wrap, stages);
-            if (items.length) return { items, errors, used: label };
+            if (items.length) return { items, errors, used: label, stages };
             errors.push(`${label}: bos sonuc ${JSON.stringify(stages)}`);
         } catch (error) {
             // Hata yutulmuyor: menu okunamadiginda sebebini sayfa kodu
