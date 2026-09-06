@@ -14,7 +14,7 @@ import { items, menus, sections } from '@wix/restaurants';
 
 // Yayindaki paketin bu dosyanin guncel halini icerip icermedigini
 // anlamak icin. Degisiklik yaptikca artiriliyor.
-export const DATA_MODULE_VERSION = 'v3-pref-cola';
+export const DATA_MODULE_VERSION = 'v4-id-join';
 
 const HIGHLIGHT_COUNT = 6;
 
@@ -93,6 +93,14 @@ function imageAlt(item) {
     return (item && item.name) || '';
 }
 
+// Bolum ve urun kimligi ortama gore "id" ya da "_id" olarak geliyor.
+// SDK tarafinda "id" bos donuyordu, bu yuzden bolum-urun eslesmesi hic
+// tutmuyor ve secim duz liste sirasina dusuyordu.
+function idOf(entity) {
+    if (!entity) return '';
+    return entity.id || entity._id || '';
+}
+
 function isEligible(item) {
     if (!item) return false;
     if (item.visible === false) return false;
@@ -103,7 +111,7 @@ function isEligible(item) {
 
 function toCard(item) {
     return {
-        id: item.id || '',
+        id: idOf(item),
         name: item.name || '',
         note: (item.description || '').trim(),
         price: formattedPrice(item),
@@ -137,7 +145,7 @@ export async function loadHighlights(wrap, stages) {
     const sectionsResponse = await listSections({ paging: { limit: 100 } });
     const sectionList = (sectionsResponse && sectionsResponse.sections) || [];
     note('sectionsFetched', sectionList.length);
-    const sectionById = new Map(sectionList.map((s) => [s.id, s]));
+    const sectionById = new Map(sectionList.map((s) => [idOf(s), s]).filter(([id]) => id));
 
     // Bolumleri menudeki siraya gore geziyoruz; listSections sirayi korumuyor.
     // Menudeki sirayi kullanmayi tercih ediyoruz. Id'ler eslesmezse
@@ -150,7 +158,9 @@ export async function loadHighlights(wrap, stages) {
         orderedSections = sectionList;
         note('orderFallback', true);
         note('sampleMenuSectionId', String(sectionIds[0] || ''));
-        note('sampleSectionId', String((sectionList[0] || {}).id || ''));
+        note('sampleSectionId', String(idOf(sectionList[0])));
+        note('sectionKeys', Object.keys(sectionList[0] || {}).join(','));
+        note('itemKeys', '');
     }
     note('sections', orderedSections.length);
 
@@ -167,14 +177,16 @@ export async function loadHighlights(wrap, stages) {
     const itemList = (itemsResponse && itemsResponse.items) || [];
     note('items', itemList.length);
     note('eligible', itemList.filter(isEligible).length);
-    const itemById = new Map(itemList.map((item) => [item.id, item]));
+    const itemById = new Map(itemList.map((item) => [idOf(item), item]).filter(([id]) => id));
+    note('itemKeys', Object.keys(itemList[0] || {}).join(','));
+    note('itemsWithId', itemList.filter((i) => idOf(i)).length);
 
     // Bolum basina en fazla bir urun: ana sayfada cesitlilik olsun.
     // Bolum icinde "featured" isaretli urun varsa o secilir, boylece hangi
     // urunun one cikacagini restoran menu panelinden belirleyebiliyor.
     // Urun kimligi her ortamda gelmiyor (bolumler id'siz donuyor), bu yuzden
     // tekrar kontrolu isim uzerinden yapiliyor.
-    const keyOf = (item) => item.id || item.name || '';
+    const keyOf = (item) => idOf(item) || item.name || '';
 
     const picked = [];
     const pickedKeys = new Set();
