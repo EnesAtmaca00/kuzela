@@ -77,7 +77,7 @@ function cardsHtml(list, revealed) {
 
 // Tarayicinin hangi surumu calistirdigi konsoldan anlasilsin: "tepki yok"
 // derken eski onbellek surumu mu calisiyor, yoksa tiklama mi ulasmiyor?
-const EMBED_VERSION = 'v12-item-links';
+const EMBED_VERSION = 'v13-no-preventdefault';
 console.log('[kuzela] gomulu sayfa yuklendi, surum:', EMBED_VERSION);
 
 class KuzelaHome extends HTMLElement {
@@ -284,19 +284,20 @@ class KuzelaHome extends HTMLElement {
     const followLink = (event, link) => {
       const href = link && link.getAttribute('href');
       if (!href || href.charAt(0) === '#') return; // sayfa ici baglantilar asagida
-      if (event.defaultPrevented) return;          // zaten ele alindi
+      // Hem dogrudan hem delege dinleyici var; ayni tiklama iki kez
+      // islenmesin diye olayi isaretliyoruz.
+      if (event.__kzHandled) return;
+      event.__kzHandled = true;
 
-      // Teshis: tiklama isleyiciye ulasti mi, tarayici konsolundan gorulebilsin.
       console.log('[kuzela] gezinme istegi:', href);
 
-      event.preventDefault();
+      // preventDefault ETMIYORUZ. Onceden ediyorduk ve tarayicinin kendi
+      // target="_top" gezinmesini iptal edip yerine sayfa koduna guveniyorduk;
+      // o yol takilinca tiklama tamamen olu kaliyordu (sag tik > yeni sekmede
+      // ac calisiyordu, sol tik calismiyordu - engelleyen bizdik).
+      // Simdi iki yol da acik: tarayici gidebiliyorsa gider, sandbox
+      // engellerse asagidaki mesajla sayfa kodu goturur.
       window.parent.postMessage({ type: 'kuzelaNavigate', url: href, page: link.getAttribute('data-kz-page') || '' }, '*');
-      try {
-        if (window.top === window) window.location.href = href;
-        else window.top.location.href = href;
-      } catch (error) {
-        // Sandbox engelledi: gezinmeyi sayfa kodu yapacak.
-      }
     };
 
     // Once dogrudan dinleyici: her baglantiya tek tek baglaniyor. Kartlar
