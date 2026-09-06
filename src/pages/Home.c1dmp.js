@@ -28,6 +28,18 @@ const HEIGHT_STEP = 100;
 const MIN_HEIGHT = 2000;
 const MAX_HEIGHT = 9000;
 
+/*
+ * Sayfa adlari degisebiliyor (/online-ordering <-> /bestel-nu,
+ * /kontakt <-> /contact). Sabit adres yazmak yerine sitede hangisi varsa
+ * ona gidiyoruz; boylece yeniden adlandirma linkleri kirmiyor.
+ * Sirasi onemli: once tercih edilen yeni ad.
+ */
+const PAGE_CANDIDATES = {
+    order: ['/bestel-nu', '/online-ordering'],
+    contact: ['/contact', '/kontakt'],
+    about: ['/over-ons']
+};
+
 function knownPagePaths() {
     try {
         const structure = wixSite.getSiteStructure() || {};
@@ -37,7 +49,7 @@ function knownPagePaths() {
     }
 }
 
-function navigateTo(rawUrl) {
+function navigateTo(rawUrl, pageKey) {
     const target = String(rawUrl || '');
     // Iframe baska bir origin'de; yalnizca bu sitenin adreslerine izin var.
     if (target.indexOf(SITE_ORIGIN) !== 0) return;
@@ -53,12 +65,20 @@ function navigateTo(rawUrl) {
     // sey yapmiyor, hata da vermiyor. Bu iki kez fark edilmeden gecti, o
     // yuzden hedefi sitenin sayfa listesiyle karsilastirip uyariyoruz.
     const known = knownPagePaths();
-    if (path && known.length && known.indexOf(path) === -1) {
-        console.warn('[kuzela] hedef sayfa sitede yok:', path, '| mevcut sayfalar:', known.join(', '));
+
+    // Gomulu sayfadaki adres eskimis olabilir: mantiksal sayfa adi verildiyse
+    // sitede gercekten var olan karsiligini kullaniyoruz.
+    let finalPath = path;
+    const candidates = PAGE_CANDIDATES[pageKey] || [];
+    const live = candidates.find((candidate) => known.indexOf(candidate) !== -1);
+    if (live) finalPath = live;
+
+    if (finalPath && known.length && known.indexOf(finalPath) === -1) {
+        console.warn('[kuzela] hedef sayfa sitede yok:', finalPath, '| mevcut sayfalar:', known.join(', '));
     }
 
     try {
-        wixLocation.to(path || target);
+        wixLocation.to(finalPath || target);
     } catch (error) {
         console.warn('[kuzela] gezinme basarisiz:', target, (error && error.message) || error);
     }
@@ -164,7 +184,7 @@ $w.onReady(function () {
             // sandbox'li iframe'i ust pencereye gitmeye izin vermiyor, bu
             // yuzden tiklayinca hicbir sey olmuyordu. Gezinmeyi burada
             // yapiyoruz. Sadece bu sitenin kendi adreslerine izin veriliyor.
-            navigateTo(data.url);
+            navigateTo(data.url, data.page);
             return;
         }
 

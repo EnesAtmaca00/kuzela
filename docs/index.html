@@ -52,7 +52,7 @@ function cardsHtml(list, revealed) {
     const alt = escapeHtml(item.alt || `${item.name} bij Kuzela The Bowl House`);
     return `
   <article class="product reveal${revealed ? ' visible' : ''}" style="--delay:${index * 70}ms">
-    <a href="${ORDER_URL}" target="_top" aria-label="Bestel ${name}">
+    <a href="${ORDER_URL}" data-kz-page="order" target="_top" aria-label="Bestel ${name}">
       <div class="photo">
         <img src="${escapeHtml(item.image)}" alt="${alt}" loading="lazy">
         <span>${String(index + 1).padStart(2, '0')}</span>
@@ -65,7 +65,7 @@ function cardsHtml(list, revealed) {
 
 // Tarayicinin hangi surumu calistirdigi konsoldan anlasilsin: "tepki yok"
 // derken eski onbellek surumu mu calisiyor, yoksa tiklama mi ulasmiyor?
-const EMBED_VERSION = 'v10-contact';
+const EMBED_VERSION = 'v11-resolve';
 console.log('[kuzela] gomulu sayfa yuklendi, surum:', EMBED_VERSION);
 
 class KuzelaHome extends HTMLElement {
@@ -165,14 +165,14 @@ class KuzelaHome extends HTMLElement {
         @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
       </style>
       <main class="site">
-        <section class="hero" id="top"><div class="hero-content"><p class="eyebrow">VERS GEMAAKT · LAAKDAL</p><h1>Jouw bowl.<br>Jouw smaak.</h1><div class="hero-bottom"><p class="hero-copy">Pokébowls, quesadilla’s, wraps, broodjes en wings. Vers bereid, royaal gevuld en klaar wanneer jij dat bent.</p><div class="hero-buttons"><a class="pill lime" href="${ORDER_URL}" target="_top">Bestel online</a><a class="pill" href="${CONTACT_URL}" target="_top">Contact</a></div></div></div></section>
+        <section class="hero" id="top"><div class="hero-content"><p class="eyebrow">VERS GEMAAKT · LAAKDAL</p><h1>Jouw bowl.<br>Jouw smaak.</h1><div class="hero-bottom"><p class="hero-copy">Pokébowls, quesadilla’s, wraps, broodjes en wings. Vers bereid, royaal gevuld en klaar wanneer jij dat bent.</p><div class="hero-buttons"><a class="pill lime" href="${ORDER_URL}" data-kz-page="order" target="_top">Bestel online</a><a class="pill" href="${CONTACT_URL}" data-kz-page="contact" target="_top">Contact</a></div></div></div></section>
         <div class="ticker" aria-hidden="true"><span>VERS GEMAAKT <i>·</i> JIJ KIEST <i>·</i> VOL SMAAK <i>·</i> LAAKDAL <i>·</i></span><span>VERS GEMAAKT <i>·</i> JIJ KIEST <i>·</i> VOL SMAAK <i>·</i> LAAKDAL <i>·</i></span></div>
-        <section class="intro wrap" id="over"><div><p class="eyebrow">KUZELA THE BOWL HOUSE</p><h2>Geen standaard fastfood.</h2></div><div class="intro-copy reveal"><p>Goede ingrediënten, stevige porties en combinaties die je zelf samenstelt. Eenvoudig bestellen, vers bereid en precies zoals jij het wilt.</p><a class="pill dark" href="${ORDER_URL}" target="_top">Waar heb je zin in?</a></div></section>
+        <section class="intro wrap" id="over"><div><p class="eyebrow">KUZELA THE BOWL HOUSE</p><h2>Geen standaard fastfood.</h2></div><div class="intro-copy reveal"><p>Goede ingrediënten, stevige porties en combinaties die je zelf samenstelt. Eenvoudig bestellen, vers bereid en precies zoals jij het wilt.</p><a class="pill dark" href="${ORDER_URL}" data-kz-page="order" target="_top">Waar heb je zin in?</a></div></section>
         <section class="proofs"><article class="proof"><span>01</span><h3>Jij kiest</h3><p>Stel je eigen bowl samen of kies een vaste favoriet.</p></article><article class="proof"><span>02</span><h3>Wij maken</h3><p>Je bestelling wordt pas bereid wanneer jij bestelt.</p></article><article class="proof"><span>03</span><h3>Direct genieten</h3><p>Afhalen of bezorgen: kies wat voor jou het makkelijkst is.</p></article></section>
-        <section class="menu" id="menu"><div class="wrap"><div class="menu-head"><div><p class="eyebrow">POPULAIRE KEUZES</p><h2>Vandaag op je verlanglijst.</h2></div><a class="pill dark" href="${ORDER_URL}" target="_top">Bekijk alles</a></div><div class="grid">${cardsHtml(FALLBACK_PRODUCTS, false)}</div></div></section>
-        <section class="story"><div class="story-media" role="img" aria-label="Vers broodje van Kuzela"></div><div class="story-copy"><div><p class="eyebrow">OVER KUZELA</p><h2>Simpel voelt. Allesbehalve simpel smaakt.</h2></div><div class="story-bottom"><p>Midden in Laakdal maken we eten zonder gedoe: uitgesproken smaken, verse ingrediënten en genoeg keuze voor ieder moment.</p><a class="pill lime" href="${ABOUT_URL}" target="_top">Proef Kuzela</a></div></div></section>
+        <section class="menu" id="menu"><div class="wrap"><div class="menu-head"><div><p class="eyebrow">POPULAIRE KEUZES</p><h2>Vandaag op je verlanglijst.</h2></div><a class="pill dark" href="${ORDER_URL}" data-kz-page="order" target="_top">Bekijk alles</a></div><div class="grid">${cardsHtml(FALLBACK_PRODUCTS, false)}</div></div></section>
+        <section class="story"><div class="story-media" role="img" aria-label="Vers broodje van Kuzela"></div><div class="story-copy"><div><p class="eyebrow">OVER KUZELA</p><h2>Simpel voelt. Allesbehalve simpel smaakt.</h2></div><div class="story-bottom"><p>Midden in Laakdal maken we eten zonder gedoe: uitgesproken smaken, verse ingrediënten en genoeg keuze voor ieder moment.</p><a class="pill lime" href="${ABOUT_URL}" data-kz-page="about" target="_top">Proef Kuzela</a></div></div></section>
         <section class="location" id="locatie"><div class="wrap location-grid"><div><p class="eyebrow">KOM LANGS</p><h2>Jouw volgende bowl wacht in Laakdal.</h2></div><aside class="location-card"><p>Kuzela The Bowl House</p><strong>Markt 23<br>2430 Laakdal</strong><p>Afhalen en bezorging beschikbaar.</p></aside></div></section>
-        <section class="closing"><p class="eyebrow">KLAAR OM TE KIEZEN?</p><h2>Bestel. Proef. Herhaal.</h2><a class="pill dark" href="${ORDER_URL}" target="_top">Bestel bij Kuzela</a></section>
+        <section class="closing"><p class="eyebrow">KLAAR OM TE KIEZEN?</p><h2>Bestel. Proef. Herhaal.</h2><a class="pill dark" href="${ORDER_URL}" data-kz-page="order" target="_top">Bestel bij Kuzela</a></section>
       </main>`;
 
     /* ---------- reveal animasyonu ---------- */
@@ -278,7 +278,7 @@ class KuzelaHome extends HTMLElement {
       console.log('[kuzela] gezinme istegi:', href);
 
       event.preventDefault();
-      window.parent.postMessage({ type: 'kuzelaNavigate', url: href }, '*');
+      window.parent.postMessage({ type: 'kuzelaNavigate', url: href, page: link.getAttribute('data-kz-page') || '' }, '*');
       try {
         if (window.top === window) window.location.href = href;
         else window.top.location.href = href;
