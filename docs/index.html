@@ -77,7 +77,7 @@ function cardsHtml(list, revealed) {
 
 // Tarayicinin hangi surumu calistirdigi konsoldan anlasilsin: "tepki yok"
 // derken eski onbellek surumu mu calisiyor, yoksa tiklama mi ulasmiyor?
-const EMBED_VERSION = 'v16';
+const EMBED_VERSION = 'v18-no-rerender';
 console.log('[kuzela] gomulu sayfa yuklendi, surum:', EMBED_VERSION);
 
 class KuzelaHome extends HTMLElement {
@@ -250,8 +250,20 @@ class KuzelaHome extends HTMLElement {
     /* ---------- menuden gelen urun verisi ---------- */
     const grid = root.querySelector('.grid');
 
+    // Sayfa kodu urun listesini her mesajda tekrar gonderiyor ve gomulu sayfa
+    // saniyede bir yukseklik mesaji attigi icin bu saniyede bir tekrarlaniyordu.
+    // Her seferinde grid.innerHTML yeniden yazilinca kartlar silinip yeniden
+    // yaratiliyor, gercek fare tiklamasi da mousedown ile mouseup arasinda
+    // karti kaybedip hic olusmuyordu (programli .click() ve sag tik calisiyordu).
+    // Ayni veri geldiginde artik hicbir sey yapmiyoruz.
+    let productsSignature = '';
+
     const applyProducts = (list) => {
       if (!grid || !Array.isArray(list) || !list.length) return;
+
+      const signature = list.map((item) => [item.id, item.name, item.price, item.image].join('~')).join('|');
+      if (signature === productsSignature) return;
+      productsSignature = signature;
       // Kartlar zaten gorunur olarak ciziliyor: veri sonradan geldigi icin
       // reveal animasyonunu bastan oynatmak yerine dogrudan yerine koyuyoruz.
       grid.innerHTML = cardsHtml(list.slice(0, 8), true);
