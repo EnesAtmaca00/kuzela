@@ -1,5 +1,6 @@
 import wixWindow from 'wix-window';
 import wixLocation from 'wix-location';
+import wixSite from 'wix-site';
 import { getHighlights } from 'backend/menu.web';
 
 // Iframe'den gelen gezinme istekleri yalnizca bu adresle baslayabilir.
@@ -27,6 +28,15 @@ const HEIGHT_STEP = 100;
 const MIN_HEIGHT = 2000;
 const MAX_HEIGHT = 9000;
 
+function knownPagePaths() {
+    try {
+        const structure = wixSite.getSiteStructure() || {};
+        return (structure.pages || []).map((page) => page.url).filter(Boolean);
+    } catch (error) {
+        return [];
+    }
+}
+
 function navigateTo(rawUrl) {
     const target = String(rawUrl || '');
     // Iframe baska bir origin'de; yalnizca bu sitenin adreslerine izin var.
@@ -37,6 +47,15 @@ function navigateTo(rawUrl) {
     // bu yuzden once goreli yola cevirmeyi deniyoruz.
     const base = String(wixLocation.baseUrl || '').replace(/\/+$/, '');
     const path = base && target.indexOf(base) === 0 ? target.slice(base.length) : '';
+
+    // Sayfa adi degisince (orn. /online-ordering -> /bestel-nu) eski adres
+    // sessizce olu kaliyor: wixLocation.to() cozulmeyen bir yol icin hicbir
+    // sey yapmiyor, hata da vermiyor. Bu iki kez fark edilmeden gecti, o
+    // yuzden hedefi sitenin sayfa listesiyle karsilastirip uyariyoruz.
+    const known = knownPagePaths();
+    if (path && known.length && known.indexOf(path) === -1) {
+        console.warn('[kuzela] hedef sayfa sitede yok:', path, '| mevcut sayfalar:', known.join(', '));
+    }
 
     try {
         wixLocation.to(path || target);
