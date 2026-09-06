@@ -14,6 +14,28 @@ import { items, menus, sections } from '@wix/restaurants';
 
 const HIGHLIGHT_COUNT = 6;
 
+/*
+ * Bir bolumde birden fazla uygun urun varsa hangisinin one cikacagi.
+ * Sira onemli: listedeki ilk eslesme kazanir. Once tam isim, sonra parcali
+ * eslesme araniyor - "Coca-Cola" yazinca "Coca-Cola zero" secilmiyor.
+ *
+ * Menu panelindeki "featured" isareti bundan once geliyor, yani restoran
+ * isterse secimi buraya dokunmadan panelden degistirebilir. Icecek bolumunde
+ * varsayilan olarak Spa blauw geliyordu; ana sayfada cola tercih ediliyor.
+ */
+const PREFERRED_ITEM_NAMES = ['Coca-Cola'];
+
+function preferredChoice(candidates) {
+    for (const wanted of PREFERRED_ITEM_NAMES) {
+        const target = wanted.toLowerCase();
+        const exact = candidates.find((item) => (item.name || '').toLowerCase() === target);
+        if (exact) return exact;
+        const partial = candidates.find((item) => (item.name || '').toLowerCase().includes(target));
+        if (partial) return partial;
+    }
+    return null;
+}
+
 function priceText(priceInfo) {
     if (!priceInfo) return '';
     if (priceInfo.formattedPrice) return priceInfo.formattedPrice;
@@ -158,7 +180,9 @@ export async function loadHighlights(wrap, stages) {
             .map((id) => itemById.get(id))
             .filter(isEligible);
         if (!candidates.length) continue;
-        const choice = candidates.find((item) => item.featured) || candidates[0];
+        const choice = candidates.find((item) => item.featured)
+            || preferredChoice(candidates)
+            || candidates[0];
         if (pickedKeys.has(keyOf(choice))) continue;
         picked.push(choice);
         pickedKeys.add(keyOf(choice));
