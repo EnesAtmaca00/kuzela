@@ -14,11 +14,11 @@
 <body>
 <kuzela-home></kuzela-home>
 <script>
-// DIKKAT: yayindaki slug hala /online-ordering. Site haritasi ve curl
-// /bestel-nu'yu 200 gosteriyor ama tarayicida gercek 404 donuyor: sayfa
-// editorde yeniden adlandirilmis, degisiklik yayina alinmamis. Yeniden
-// adlandirma yayinlandiginda burasi /bestel-nu yapilmali.
-const ORDER_URL = 'https://nepagy.wixstudio.com/my-site-2/online-ordering';
+// Siparis sayfasi: /online-ordering -> /bestel-nu olarak yeniden adlandirildi
+// ve yayinlandi (eski adres artik 404). Slug degisirse burasi guncellenmeli;
+// dogrulamayi tarayicida yap - Wix 404 sayfasini HTTP 200 ile servis ettigi
+// icin curl ve site haritasi yaniltiyor.
+const ORDER_URL = 'https://nepagy.wixstudio.com/my-site-2/bestel-nu';
 const ABOUT_URL = 'https://nepagy.wixstudio.com/my-site-2/over-ons';
 const CONTACT_URL = 'https://nepagy.wixstudio.com/my-site-2/kontakt';
 
@@ -65,7 +65,7 @@ function cardsHtml(list, revealed) {
 
 // Tarayicinin hangi surumu calistirdigi konsoldan anlasilsin: "tepki yok"
 // derken eski onbellek surumu mu calisiyor, yoksa tiklama mi ulasmiyor?
-const EMBED_VERSION = 'v8';
+const EMBED_VERSION = 'v9-bestel-nu';
 console.log('[kuzela] gomulu sayfa yuklendi, surum:', EMBED_VERSION);
 
 class KuzelaHome extends HTMLElement {
