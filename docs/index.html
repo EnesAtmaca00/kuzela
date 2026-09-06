@@ -246,6 +246,10 @@ class KuzelaHome extends HTMLElement {
       if (!data || typeof data !== 'object') return;
       if (data.type === 'kuzelaAskHeight') sendHeight(true);
       if (data.type === 'kuzelaProducts') applyProducts(data.items);
+      if (data.type === 'kuzelaTestNavigate') {
+        // Gezinme yolunu disaridan tetiklemek icin (tiklamayi taklit eder).
+        window.parent.postMessage({ type: 'kuzelaNavigate', url: ORDER_URL }, '*');
+      }
     });
 
     // Sayfa kodu, iframe hazir olmadan urunleri gondermis olabilir.
