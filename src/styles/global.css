@@ -199,372 +199,803 @@ html { scroll-behavior: smooth; }
 /* === Kuzela ana sayfa gomulu HTML yuksekligi (otomatik uretildi) ===
  *
  * Ana sayfa tek bir iframe'den (#html1) olusuyor. Wix Studio'da $w
- * elemanlarinin height ozelligi olmadigi icin yukseklik Velo'dan
- * atanamiyor. Bunun yerine src/pages/Home.c1dmp.js iframe'in bildirdigi
- * icerik yuksekligini 100 piksele YUKARI yuvarlayip sayfaya kz-h-<piksel>
- * sinifi ekliyor; yuksekligi asagidaki kurallar uyguluyor.
+ * elemanlarinin height ozelligi olmadigi icin yukseklik Velo'dan atanamiyor.
+ * Home.c1dmp.js iframe'in bildirdigi icerik yuksekligini 100 piksele YUKARI
+ * yuvarlayip sayfaya kz-h-<piksel> sinifi ekliyor; yuksekligi bu kurallar
+ * uyguluyor.
  *
- * Secici neden boyle:
- *  - Wix custom CSS'te ID secici kullanilamiyor. Yazdigimiz her sinif ve
- *    ID'nin basina "wixui-" ekleniyor; siniflarda bu sorun degil (Wix her
- *    ikisini de elemana koyuyor) ama #c1dmp -> #wixui-c1dmp diye hicbir
- *    seye uymayan bir secici oluyor.
- *  - kz-h-* sinifini tasiyan .page elemani, iframe'in bulundugu dalin
- *    onceki kardesi. Bu yuzden kardes birlestiricisi (~) kullaniliyor.
- *  - .section ile sinirli oldugu icin header'daki sepet iframe'ine
- *    dokunmuyor. Onizleme DOM'unda dogrulandi.
+ * Neden butun zincire yaziliyor: bolumun min-height'i editorde breakpoint
+ * basina sabitlenmis (orn. <=900px icin 9250px) ve bilesen place-self:stretch
+ * ile o yukseklige yayiliyor. Sadece iframe'i boyutlandirmak yetmiyordu:
+ * icerik daha kisayken bolum sabit yuksekligini koruyup sayfanin altinda
+ * kocaman bir bosluk birakiyordu. min-height'i 0 / height'i auto yapmak da
+ * ise yaramadi (olculdu), bu yuzden olculen yukseklik zincirin her katmanina
+ * height/min-height/max-height olarak aciktan yaziliyor.
+ *
+ * Secici notu: Wix custom CSS'te ID secici kullanilamiyor (yazdiginiz her
+ * sinif ve ID'nin basina "wixui-" ekleniyor). kz-h-* sinifini tasiyan .page
+ * elemani, iframe'in bulundugu dalin onceki kardesi; bu yuzden ~ kullaniliyor.
+ * :has(wix-iframe) ile sinirli oldugu icin diger sayfalarin uygulama
+ * iframe'lerine (sepet, odeme, siparis) dokunmuyor.
  */
 
-/* Bolum ve ara kapsayicilar icerige sarilsin.
- *
- * Bunlar olmadan: asagidaki kurallar sadece iframe'i boyutlandiriyor, ama
- * bileseni saran kutular editorden gelen SABIT yuksekligi koruyor. Iframe
- * ondan buyukse kutu buyuyor, kucukse kutu oldugu yerde kaliyor ve altta
- * kocaman bir bosluk olusuyor (768px'te kapsayici 9250px, icerik 4800px).
- * Masaustunde fark edilmiyordu cunku orada editor yuksekligi icerikten
- * kucuk. Bu yuzden dar ekranda sayfa alt bilgiye yapismiyordu.
- *
- * kz-embed-page sinifini Home.c1dmp.js her zaman ekliyor, yani bu blok
- * yalnizca ana sayfada calisiyor; diger sayfalarin uygulama iframe'lerine
- * (sepet, odeme, siparis) dokunmuyor.
- */
-.page.kz-embed-page ~ div .section:has(wix-iframe),
-.page.kz-embed-page ~ div .section:has(wix-iframe) > div,
-.page.kz-embed-page ~ div .section:has(wix-iframe) > div > div,
-.page.kz-embed-page ~ div .section div:has(> wix-iframe) {
-  height: auto !important;
-  min-height: 0 !important;
+.page.kz-h-2000 ~ div .section:has(wix-iframe),
+.page.kz-h-2000 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-2000 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-2000 ~ div .section div:has(> wix-iframe),
+.page.kz-h-2000 ~ div .section wix-iframe > div,
+.page.kz-h-2000 ~ div .section wix-iframe iframe {
+  height: 2000px !important;
+  min-height: 2000px !important;
+  max-height: 2000px !important;
 }
 
-.page.kz-h-1000 ~ div .section wix-iframe > div,
-.page.kz-h-1000 ~ div .section wix-iframe iframe { height: 1000px !important; }
-
-.page.kz-h-1100 ~ div .section wix-iframe > div,
-.page.kz-h-1100 ~ div .section wix-iframe iframe { height: 1100px !important; }
-
-.page.kz-h-1200 ~ div .section wix-iframe > div,
-.page.kz-h-1200 ~ div .section wix-iframe iframe { height: 1200px !important; }
-
-.page.kz-h-1300 ~ div .section wix-iframe > div,
-.page.kz-h-1300 ~ div .section wix-iframe iframe { height: 1300px !important; }
-
-.page.kz-h-1400 ~ div .section wix-iframe > div,
-.page.kz-h-1400 ~ div .section wix-iframe iframe { height: 1400px !important; }
-
-.page.kz-h-1500 ~ div .section wix-iframe > div,
-.page.kz-h-1500 ~ div .section wix-iframe iframe { height: 1500px !important; }
-
-.page.kz-h-1600 ~ div .section wix-iframe > div,
-.page.kz-h-1600 ~ div .section wix-iframe iframe { height: 1600px !important; }
-
-.page.kz-h-1700 ~ div .section wix-iframe > div,
-.page.kz-h-1700 ~ div .section wix-iframe iframe { height: 1700px !important; }
-
-.page.kz-h-1800 ~ div .section wix-iframe > div,
-.page.kz-h-1800 ~ div .section wix-iframe iframe { height: 1800px !important; }
-
-.page.kz-h-1900 ~ div .section wix-iframe > div,
-.page.kz-h-1900 ~ div .section wix-iframe iframe { height: 1900px !important; }
-
-.page.kz-h-2000 ~ div .section wix-iframe > div,
-.page.kz-h-2000 ~ div .section wix-iframe iframe { height: 2000px !important; }
-
+.page.kz-h-2100 ~ div .section:has(wix-iframe),
+.page.kz-h-2100 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-2100 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-2100 ~ div .section div:has(> wix-iframe),
 .page.kz-h-2100 ~ div .section wix-iframe > div,
-.page.kz-h-2100 ~ div .section wix-iframe iframe { height: 2100px !important; }
+.page.kz-h-2100 ~ div .section wix-iframe iframe {
+  height: 2100px !important;
+  min-height: 2100px !important;
+  max-height: 2100px !important;
+}
 
+.page.kz-h-2200 ~ div .section:has(wix-iframe),
+.page.kz-h-2200 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-2200 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-2200 ~ div .section div:has(> wix-iframe),
 .page.kz-h-2200 ~ div .section wix-iframe > div,
-.page.kz-h-2200 ~ div .section wix-iframe iframe { height: 2200px !important; }
+.page.kz-h-2200 ~ div .section wix-iframe iframe {
+  height: 2200px !important;
+  min-height: 2200px !important;
+  max-height: 2200px !important;
+}
 
+.page.kz-h-2300 ~ div .section:has(wix-iframe),
+.page.kz-h-2300 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-2300 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-2300 ~ div .section div:has(> wix-iframe),
 .page.kz-h-2300 ~ div .section wix-iframe > div,
-.page.kz-h-2300 ~ div .section wix-iframe iframe { height: 2300px !important; }
+.page.kz-h-2300 ~ div .section wix-iframe iframe {
+  height: 2300px !important;
+  min-height: 2300px !important;
+  max-height: 2300px !important;
+}
 
+.page.kz-h-2400 ~ div .section:has(wix-iframe),
+.page.kz-h-2400 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-2400 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-2400 ~ div .section div:has(> wix-iframe),
 .page.kz-h-2400 ~ div .section wix-iframe > div,
-.page.kz-h-2400 ~ div .section wix-iframe iframe { height: 2400px !important; }
+.page.kz-h-2400 ~ div .section wix-iframe iframe {
+  height: 2400px !important;
+  min-height: 2400px !important;
+  max-height: 2400px !important;
+}
 
+.page.kz-h-2500 ~ div .section:has(wix-iframe),
+.page.kz-h-2500 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-2500 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-2500 ~ div .section div:has(> wix-iframe),
 .page.kz-h-2500 ~ div .section wix-iframe > div,
-.page.kz-h-2500 ~ div .section wix-iframe iframe { height: 2500px !important; }
+.page.kz-h-2500 ~ div .section wix-iframe iframe {
+  height: 2500px !important;
+  min-height: 2500px !important;
+  max-height: 2500px !important;
+}
 
+.page.kz-h-2600 ~ div .section:has(wix-iframe),
+.page.kz-h-2600 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-2600 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-2600 ~ div .section div:has(> wix-iframe),
 .page.kz-h-2600 ~ div .section wix-iframe > div,
-.page.kz-h-2600 ~ div .section wix-iframe iframe { height: 2600px !important; }
+.page.kz-h-2600 ~ div .section wix-iframe iframe {
+  height: 2600px !important;
+  min-height: 2600px !important;
+  max-height: 2600px !important;
+}
 
+.page.kz-h-2700 ~ div .section:has(wix-iframe),
+.page.kz-h-2700 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-2700 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-2700 ~ div .section div:has(> wix-iframe),
 .page.kz-h-2700 ~ div .section wix-iframe > div,
-.page.kz-h-2700 ~ div .section wix-iframe iframe { height: 2700px !important; }
+.page.kz-h-2700 ~ div .section wix-iframe iframe {
+  height: 2700px !important;
+  min-height: 2700px !important;
+  max-height: 2700px !important;
+}
 
+.page.kz-h-2800 ~ div .section:has(wix-iframe),
+.page.kz-h-2800 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-2800 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-2800 ~ div .section div:has(> wix-iframe),
 .page.kz-h-2800 ~ div .section wix-iframe > div,
-.page.kz-h-2800 ~ div .section wix-iframe iframe { height: 2800px !important; }
+.page.kz-h-2800 ~ div .section wix-iframe iframe {
+  height: 2800px !important;
+  min-height: 2800px !important;
+  max-height: 2800px !important;
+}
 
+.page.kz-h-2900 ~ div .section:has(wix-iframe),
+.page.kz-h-2900 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-2900 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-2900 ~ div .section div:has(> wix-iframe),
 .page.kz-h-2900 ~ div .section wix-iframe > div,
-.page.kz-h-2900 ~ div .section wix-iframe iframe { height: 2900px !important; }
+.page.kz-h-2900 ~ div .section wix-iframe iframe {
+  height: 2900px !important;
+  min-height: 2900px !important;
+  max-height: 2900px !important;
+}
 
+.page.kz-h-3000 ~ div .section:has(wix-iframe),
+.page.kz-h-3000 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-3000 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-3000 ~ div .section div:has(> wix-iframe),
 .page.kz-h-3000 ~ div .section wix-iframe > div,
-.page.kz-h-3000 ~ div .section wix-iframe iframe { height: 3000px !important; }
+.page.kz-h-3000 ~ div .section wix-iframe iframe {
+  height: 3000px !important;
+  min-height: 3000px !important;
+  max-height: 3000px !important;
+}
 
+.page.kz-h-3100 ~ div .section:has(wix-iframe),
+.page.kz-h-3100 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-3100 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-3100 ~ div .section div:has(> wix-iframe),
 .page.kz-h-3100 ~ div .section wix-iframe > div,
-.page.kz-h-3100 ~ div .section wix-iframe iframe { height: 3100px !important; }
+.page.kz-h-3100 ~ div .section wix-iframe iframe {
+  height: 3100px !important;
+  min-height: 3100px !important;
+  max-height: 3100px !important;
+}
 
+.page.kz-h-3200 ~ div .section:has(wix-iframe),
+.page.kz-h-3200 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-3200 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-3200 ~ div .section div:has(> wix-iframe),
 .page.kz-h-3200 ~ div .section wix-iframe > div,
-.page.kz-h-3200 ~ div .section wix-iframe iframe { height: 3200px !important; }
+.page.kz-h-3200 ~ div .section wix-iframe iframe {
+  height: 3200px !important;
+  min-height: 3200px !important;
+  max-height: 3200px !important;
+}
 
+.page.kz-h-3300 ~ div .section:has(wix-iframe),
+.page.kz-h-3300 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-3300 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-3300 ~ div .section div:has(> wix-iframe),
 .page.kz-h-3300 ~ div .section wix-iframe > div,
-.page.kz-h-3300 ~ div .section wix-iframe iframe { height: 3300px !important; }
+.page.kz-h-3300 ~ div .section wix-iframe iframe {
+  height: 3300px !important;
+  min-height: 3300px !important;
+  max-height: 3300px !important;
+}
 
+.page.kz-h-3400 ~ div .section:has(wix-iframe),
+.page.kz-h-3400 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-3400 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-3400 ~ div .section div:has(> wix-iframe),
 .page.kz-h-3400 ~ div .section wix-iframe > div,
-.page.kz-h-3400 ~ div .section wix-iframe iframe { height: 3400px !important; }
+.page.kz-h-3400 ~ div .section wix-iframe iframe {
+  height: 3400px !important;
+  min-height: 3400px !important;
+  max-height: 3400px !important;
+}
 
+.page.kz-h-3500 ~ div .section:has(wix-iframe),
+.page.kz-h-3500 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-3500 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-3500 ~ div .section div:has(> wix-iframe),
 .page.kz-h-3500 ~ div .section wix-iframe > div,
-.page.kz-h-3500 ~ div .section wix-iframe iframe { height: 3500px !important; }
+.page.kz-h-3500 ~ div .section wix-iframe iframe {
+  height: 3500px !important;
+  min-height: 3500px !important;
+  max-height: 3500px !important;
+}
 
+.page.kz-h-3600 ~ div .section:has(wix-iframe),
+.page.kz-h-3600 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-3600 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-3600 ~ div .section div:has(> wix-iframe),
 .page.kz-h-3600 ~ div .section wix-iframe > div,
-.page.kz-h-3600 ~ div .section wix-iframe iframe { height: 3600px !important; }
+.page.kz-h-3600 ~ div .section wix-iframe iframe {
+  height: 3600px !important;
+  min-height: 3600px !important;
+  max-height: 3600px !important;
+}
 
+.page.kz-h-3700 ~ div .section:has(wix-iframe),
+.page.kz-h-3700 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-3700 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-3700 ~ div .section div:has(> wix-iframe),
 .page.kz-h-3700 ~ div .section wix-iframe > div,
-.page.kz-h-3700 ~ div .section wix-iframe iframe { height: 3700px !important; }
+.page.kz-h-3700 ~ div .section wix-iframe iframe {
+  height: 3700px !important;
+  min-height: 3700px !important;
+  max-height: 3700px !important;
+}
 
+.page.kz-h-3800 ~ div .section:has(wix-iframe),
+.page.kz-h-3800 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-3800 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-3800 ~ div .section div:has(> wix-iframe),
 .page.kz-h-3800 ~ div .section wix-iframe > div,
-.page.kz-h-3800 ~ div .section wix-iframe iframe { height: 3800px !important; }
+.page.kz-h-3800 ~ div .section wix-iframe iframe {
+  height: 3800px !important;
+  min-height: 3800px !important;
+  max-height: 3800px !important;
+}
 
+.page.kz-h-3900 ~ div .section:has(wix-iframe),
+.page.kz-h-3900 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-3900 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-3900 ~ div .section div:has(> wix-iframe),
 .page.kz-h-3900 ~ div .section wix-iframe > div,
-.page.kz-h-3900 ~ div .section wix-iframe iframe { height: 3900px !important; }
+.page.kz-h-3900 ~ div .section wix-iframe iframe {
+  height: 3900px !important;
+  min-height: 3900px !important;
+  max-height: 3900px !important;
+}
 
+.page.kz-h-4000 ~ div .section:has(wix-iframe),
+.page.kz-h-4000 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-4000 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-4000 ~ div .section div:has(> wix-iframe),
 .page.kz-h-4000 ~ div .section wix-iframe > div,
-.page.kz-h-4000 ~ div .section wix-iframe iframe { height: 4000px !important; }
+.page.kz-h-4000 ~ div .section wix-iframe iframe {
+  height: 4000px !important;
+  min-height: 4000px !important;
+  max-height: 4000px !important;
+}
 
+.page.kz-h-4100 ~ div .section:has(wix-iframe),
+.page.kz-h-4100 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-4100 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-4100 ~ div .section div:has(> wix-iframe),
 .page.kz-h-4100 ~ div .section wix-iframe > div,
-.page.kz-h-4100 ~ div .section wix-iframe iframe { height: 4100px !important; }
+.page.kz-h-4100 ~ div .section wix-iframe iframe {
+  height: 4100px !important;
+  min-height: 4100px !important;
+  max-height: 4100px !important;
+}
 
+.page.kz-h-4200 ~ div .section:has(wix-iframe),
+.page.kz-h-4200 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-4200 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-4200 ~ div .section div:has(> wix-iframe),
 .page.kz-h-4200 ~ div .section wix-iframe > div,
-.page.kz-h-4200 ~ div .section wix-iframe iframe { height: 4200px !important; }
+.page.kz-h-4200 ~ div .section wix-iframe iframe {
+  height: 4200px !important;
+  min-height: 4200px !important;
+  max-height: 4200px !important;
+}
 
+.page.kz-h-4300 ~ div .section:has(wix-iframe),
+.page.kz-h-4300 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-4300 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-4300 ~ div .section div:has(> wix-iframe),
 .page.kz-h-4300 ~ div .section wix-iframe > div,
-.page.kz-h-4300 ~ div .section wix-iframe iframe { height: 4300px !important; }
+.page.kz-h-4300 ~ div .section wix-iframe iframe {
+  height: 4300px !important;
+  min-height: 4300px !important;
+  max-height: 4300px !important;
+}
 
+.page.kz-h-4400 ~ div .section:has(wix-iframe),
+.page.kz-h-4400 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-4400 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-4400 ~ div .section div:has(> wix-iframe),
 .page.kz-h-4400 ~ div .section wix-iframe > div,
-.page.kz-h-4400 ~ div .section wix-iframe iframe { height: 4400px !important; }
+.page.kz-h-4400 ~ div .section wix-iframe iframe {
+  height: 4400px !important;
+  min-height: 4400px !important;
+  max-height: 4400px !important;
+}
 
+.page.kz-h-4500 ~ div .section:has(wix-iframe),
+.page.kz-h-4500 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-4500 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-4500 ~ div .section div:has(> wix-iframe),
 .page.kz-h-4500 ~ div .section wix-iframe > div,
-.page.kz-h-4500 ~ div .section wix-iframe iframe { height: 4500px !important; }
+.page.kz-h-4500 ~ div .section wix-iframe iframe {
+  height: 4500px !important;
+  min-height: 4500px !important;
+  max-height: 4500px !important;
+}
 
+.page.kz-h-4600 ~ div .section:has(wix-iframe),
+.page.kz-h-4600 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-4600 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-4600 ~ div .section div:has(> wix-iframe),
 .page.kz-h-4600 ~ div .section wix-iframe > div,
-.page.kz-h-4600 ~ div .section wix-iframe iframe { height: 4600px !important; }
+.page.kz-h-4600 ~ div .section wix-iframe iframe {
+  height: 4600px !important;
+  min-height: 4600px !important;
+  max-height: 4600px !important;
+}
 
+.page.kz-h-4700 ~ div .section:has(wix-iframe),
+.page.kz-h-4700 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-4700 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-4700 ~ div .section div:has(> wix-iframe),
 .page.kz-h-4700 ~ div .section wix-iframe > div,
-.page.kz-h-4700 ~ div .section wix-iframe iframe { height: 4700px !important; }
+.page.kz-h-4700 ~ div .section wix-iframe iframe {
+  height: 4700px !important;
+  min-height: 4700px !important;
+  max-height: 4700px !important;
+}
 
+.page.kz-h-4800 ~ div .section:has(wix-iframe),
+.page.kz-h-4800 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-4800 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-4800 ~ div .section div:has(> wix-iframe),
 .page.kz-h-4800 ~ div .section wix-iframe > div,
-.page.kz-h-4800 ~ div .section wix-iframe iframe { height: 4800px !important; }
+.page.kz-h-4800 ~ div .section wix-iframe iframe {
+  height: 4800px !important;
+  min-height: 4800px !important;
+  max-height: 4800px !important;
+}
 
+.page.kz-h-4900 ~ div .section:has(wix-iframe),
+.page.kz-h-4900 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-4900 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-4900 ~ div .section div:has(> wix-iframe),
 .page.kz-h-4900 ~ div .section wix-iframe > div,
-.page.kz-h-4900 ~ div .section wix-iframe iframe { height: 4900px !important; }
+.page.kz-h-4900 ~ div .section wix-iframe iframe {
+  height: 4900px !important;
+  min-height: 4900px !important;
+  max-height: 4900px !important;
+}
 
+.page.kz-h-5000 ~ div .section:has(wix-iframe),
+.page.kz-h-5000 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-5000 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-5000 ~ div .section div:has(> wix-iframe),
 .page.kz-h-5000 ~ div .section wix-iframe > div,
-.page.kz-h-5000 ~ div .section wix-iframe iframe { height: 5000px !important; }
+.page.kz-h-5000 ~ div .section wix-iframe iframe {
+  height: 5000px !important;
+  min-height: 5000px !important;
+  max-height: 5000px !important;
+}
 
+.page.kz-h-5100 ~ div .section:has(wix-iframe),
+.page.kz-h-5100 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-5100 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-5100 ~ div .section div:has(> wix-iframe),
 .page.kz-h-5100 ~ div .section wix-iframe > div,
-.page.kz-h-5100 ~ div .section wix-iframe iframe { height: 5100px !important; }
+.page.kz-h-5100 ~ div .section wix-iframe iframe {
+  height: 5100px !important;
+  min-height: 5100px !important;
+  max-height: 5100px !important;
+}
 
+.page.kz-h-5200 ~ div .section:has(wix-iframe),
+.page.kz-h-5200 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-5200 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-5200 ~ div .section div:has(> wix-iframe),
 .page.kz-h-5200 ~ div .section wix-iframe > div,
-.page.kz-h-5200 ~ div .section wix-iframe iframe { height: 5200px !important; }
+.page.kz-h-5200 ~ div .section wix-iframe iframe {
+  height: 5200px !important;
+  min-height: 5200px !important;
+  max-height: 5200px !important;
+}
 
+.page.kz-h-5300 ~ div .section:has(wix-iframe),
+.page.kz-h-5300 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-5300 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-5300 ~ div .section div:has(> wix-iframe),
 .page.kz-h-5300 ~ div .section wix-iframe > div,
-.page.kz-h-5300 ~ div .section wix-iframe iframe { height: 5300px !important; }
+.page.kz-h-5300 ~ div .section wix-iframe iframe {
+  height: 5300px !important;
+  min-height: 5300px !important;
+  max-height: 5300px !important;
+}
 
+.page.kz-h-5400 ~ div .section:has(wix-iframe),
+.page.kz-h-5400 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-5400 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-5400 ~ div .section div:has(> wix-iframe),
 .page.kz-h-5400 ~ div .section wix-iframe > div,
-.page.kz-h-5400 ~ div .section wix-iframe iframe { height: 5400px !important; }
+.page.kz-h-5400 ~ div .section wix-iframe iframe {
+  height: 5400px !important;
+  min-height: 5400px !important;
+  max-height: 5400px !important;
+}
 
+.page.kz-h-5500 ~ div .section:has(wix-iframe),
+.page.kz-h-5500 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-5500 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-5500 ~ div .section div:has(> wix-iframe),
 .page.kz-h-5500 ~ div .section wix-iframe > div,
-.page.kz-h-5500 ~ div .section wix-iframe iframe { height: 5500px !important; }
+.page.kz-h-5500 ~ div .section wix-iframe iframe {
+  height: 5500px !important;
+  min-height: 5500px !important;
+  max-height: 5500px !important;
+}
 
+.page.kz-h-5600 ~ div .section:has(wix-iframe),
+.page.kz-h-5600 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-5600 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-5600 ~ div .section div:has(> wix-iframe),
 .page.kz-h-5600 ~ div .section wix-iframe > div,
-.page.kz-h-5600 ~ div .section wix-iframe iframe { height: 5600px !important; }
+.page.kz-h-5600 ~ div .section wix-iframe iframe {
+  height: 5600px !important;
+  min-height: 5600px !important;
+  max-height: 5600px !important;
+}
 
+.page.kz-h-5700 ~ div .section:has(wix-iframe),
+.page.kz-h-5700 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-5700 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-5700 ~ div .section div:has(> wix-iframe),
 .page.kz-h-5700 ~ div .section wix-iframe > div,
-.page.kz-h-5700 ~ div .section wix-iframe iframe { height: 5700px !important; }
+.page.kz-h-5700 ~ div .section wix-iframe iframe {
+  height: 5700px !important;
+  min-height: 5700px !important;
+  max-height: 5700px !important;
+}
 
+.page.kz-h-5800 ~ div .section:has(wix-iframe),
+.page.kz-h-5800 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-5800 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-5800 ~ div .section div:has(> wix-iframe),
 .page.kz-h-5800 ~ div .section wix-iframe > div,
-.page.kz-h-5800 ~ div .section wix-iframe iframe { height: 5800px !important; }
+.page.kz-h-5800 ~ div .section wix-iframe iframe {
+  height: 5800px !important;
+  min-height: 5800px !important;
+  max-height: 5800px !important;
+}
 
+.page.kz-h-5900 ~ div .section:has(wix-iframe),
+.page.kz-h-5900 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-5900 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-5900 ~ div .section div:has(> wix-iframe),
 .page.kz-h-5900 ~ div .section wix-iframe > div,
-.page.kz-h-5900 ~ div .section wix-iframe iframe { height: 5900px !important; }
+.page.kz-h-5900 ~ div .section wix-iframe iframe {
+  height: 5900px !important;
+  min-height: 5900px !important;
+  max-height: 5900px !important;
+}
 
+.page.kz-h-6000 ~ div .section:has(wix-iframe),
+.page.kz-h-6000 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-6000 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-6000 ~ div .section div:has(> wix-iframe),
 .page.kz-h-6000 ~ div .section wix-iframe > div,
-.page.kz-h-6000 ~ div .section wix-iframe iframe { height: 6000px !important; }
+.page.kz-h-6000 ~ div .section wix-iframe iframe {
+  height: 6000px !important;
+  min-height: 6000px !important;
+  max-height: 6000px !important;
+}
 
+.page.kz-h-6100 ~ div .section:has(wix-iframe),
+.page.kz-h-6100 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-6100 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-6100 ~ div .section div:has(> wix-iframe),
 .page.kz-h-6100 ~ div .section wix-iframe > div,
-.page.kz-h-6100 ~ div .section wix-iframe iframe { height: 6100px !important; }
+.page.kz-h-6100 ~ div .section wix-iframe iframe {
+  height: 6100px !important;
+  min-height: 6100px !important;
+  max-height: 6100px !important;
+}
 
+.page.kz-h-6200 ~ div .section:has(wix-iframe),
+.page.kz-h-6200 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-6200 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-6200 ~ div .section div:has(> wix-iframe),
 .page.kz-h-6200 ~ div .section wix-iframe > div,
-.page.kz-h-6200 ~ div .section wix-iframe iframe { height: 6200px !important; }
+.page.kz-h-6200 ~ div .section wix-iframe iframe {
+  height: 6200px !important;
+  min-height: 6200px !important;
+  max-height: 6200px !important;
+}
 
+.page.kz-h-6300 ~ div .section:has(wix-iframe),
+.page.kz-h-6300 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-6300 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-6300 ~ div .section div:has(> wix-iframe),
 .page.kz-h-6300 ~ div .section wix-iframe > div,
-.page.kz-h-6300 ~ div .section wix-iframe iframe { height: 6300px !important; }
+.page.kz-h-6300 ~ div .section wix-iframe iframe {
+  height: 6300px !important;
+  min-height: 6300px !important;
+  max-height: 6300px !important;
+}
 
+.page.kz-h-6400 ~ div .section:has(wix-iframe),
+.page.kz-h-6400 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-6400 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-6400 ~ div .section div:has(> wix-iframe),
 .page.kz-h-6400 ~ div .section wix-iframe > div,
-.page.kz-h-6400 ~ div .section wix-iframe iframe { height: 6400px !important; }
+.page.kz-h-6400 ~ div .section wix-iframe iframe {
+  height: 6400px !important;
+  min-height: 6400px !important;
+  max-height: 6400px !important;
+}
 
+.page.kz-h-6500 ~ div .section:has(wix-iframe),
+.page.kz-h-6500 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-6500 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-6500 ~ div .section div:has(> wix-iframe),
 .page.kz-h-6500 ~ div .section wix-iframe > div,
-.page.kz-h-6500 ~ div .section wix-iframe iframe { height: 6500px !important; }
+.page.kz-h-6500 ~ div .section wix-iframe iframe {
+  height: 6500px !important;
+  min-height: 6500px !important;
+  max-height: 6500px !important;
+}
 
+.page.kz-h-6600 ~ div .section:has(wix-iframe),
+.page.kz-h-6600 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-6600 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-6600 ~ div .section div:has(> wix-iframe),
 .page.kz-h-6600 ~ div .section wix-iframe > div,
-.page.kz-h-6600 ~ div .section wix-iframe iframe { height: 6600px !important; }
+.page.kz-h-6600 ~ div .section wix-iframe iframe {
+  height: 6600px !important;
+  min-height: 6600px !important;
+  max-height: 6600px !important;
+}
 
+.page.kz-h-6700 ~ div .section:has(wix-iframe),
+.page.kz-h-6700 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-6700 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-6700 ~ div .section div:has(> wix-iframe),
 .page.kz-h-6700 ~ div .section wix-iframe > div,
-.page.kz-h-6700 ~ div .section wix-iframe iframe { height: 6700px !important; }
+.page.kz-h-6700 ~ div .section wix-iframe iframe {
+  height: 6700px !important;
+  min-height: 6700px !important;
+  max-height: 6700px !important;
+}
 
+.page.kz-h-6800 ~ div .section:has(wix-iframe),
+.page.kz-h-6800 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-6800 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-6800 ~ div .section div:has(> wix-iframe),
 .page.kz-h-6800 ~ div .section wix-iframe > div,
-.page.kz-h-6800 ~ div .section wix-iframe iframe { height: 6800px !important; }
+.page.kz-h-6800 ~ div .section wix-iframe iframe {
+  height: 6800px !important;
+  min-height: 6800px !important;
+  max-height: 6800px !important;
+}
 
+.page.kz-h-6900 ~ div .section:has(wix-iframe),
+.page.kz-h-6900 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-6900 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-6900 ~ div .section div:has(> wix-iframe),
 .page.kz-h-6900 ~ div .section wix-iframe > div,
-.page.kz-h-6900 ~ div .section wix-iframe iframe { height: 6900px !important; }
+.page.kz-h-6900 ~ div .section wix-iframe iframe {
+  height: 6900px !important;
+  min-height: 6900px !important;
+  max-height: 6900px !important;
+}
 
+.page.kz-h-7000 ~ div .section:has(wix-iframe),
+.page.kz-h-7000 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-7000 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-7000 ~ div .section div:has(> wix-iframe),
 .page.kz-h-7000 ~ div .section wix-iframe > div,
-.page.kz-h-7000 ~ div .section wix-iframe iframe { height: 7000px !important; }
+.page.kz-h-7000 ~ div .section wix-iframe iframe {
+  height: 7000px !important;
+  min-height: 7000px !important;
+  max-height: 7000px !important;
+}
 
+.page.kz-h-7100 ~ div .section:has(wix-iframe),
+.page.kz-h-7100 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-7100 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-7100 ~ div .section div:has(> wix-iframe),
 .page.kz-h-7100 ~ div .section wix-iframe > div,
-.page.kz-h-7100 ~ div .section wix-iframe iframe { height: 7100px !important; }
+.page.kz-h-7100 ~ div .section wix-iframe iframe {
+  height: 7100px !important;
+  min-height: 7100px !important;
+  max-height: 7100px !important;
+}
 
+.page.kz-h-7200 ~ div .section:has(wix-iframe),
+.page.kz-h-7200 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-7200 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-7200 ~ div .section div:has(> wix-iframe),
 .page.kz-h-7200 ~ div .section wix-iframe > div,
-.page.kz-h-7200 ~ div .section wix-iframe iframe { height: 7200px !important; }
+.page.kz-h-7200 ~ div .section wix-iframe iframe {
+  height: 7200px !important;
+  min-height: 7200px !important;
+  max-height: 7200px !important;
+}
 
+.page.kz-h-7300 ~ div .section:has(wix-iframe),
+.page.kz-h-7300 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-7300 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-7300 ~ div .section div:has(> wix-iframe),
 .page.kz-h-7300 ~ div .section wix-iframe > div,
-.page.kz-h-7300 ~ div .section wix-iframe iframe { height: 7300px !important; }
+.page.kz-h-7300 ~ div .section wix-iframe iframe {
+  height: 7300px !important;
+  min-height: 7300px !important;
+  max-height: 7300px !important;
+}
 
+.page.kz-h-7400 ~ div .section:has(wix-iframe),
+.page.kz-h-7400 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-7400 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-7400 ~ div .section div:has(> wix-iframe),
 .page.kz-h-7400 ~ div .section wix-iframe > div,
-.page.kz-h-7400 ~ div .section wix-iframe iframe { height: 7400px !important; }
+.page.kz-h-7400 ~ div .section wix-iframe iframe {
+  height: 7400px !important;
+  min-height: 7400px !important;
+  max-height: 7400px !important;
+}
 
+.page.kz-h-7500 ~ div .section:has(wix-iframe),
+.page.kz-h-7500 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-7500 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-7500 ~ div .section div:has(> wix-iframe),
 .page.kz-h-7500 ~ div .section wix-iframe > div,
-.page.kz-h-7500 ~ div .section wix-iframe iframe { height: 7500px !important; }
+.page.kz-h-7500 ~ div .section wix-iframe iframe {
+  height: 7500px !important;
+  min-height: 7500px !important;
+  max-height: 7500px !important;
+}
 
+.page.kz-h-7600 ~ div .section:has(wix-iframe),
+.page.kz-h-7600 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-7600 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-7600 ~ div .section div:has(> wix-iframe),
 .page.kz-h-7600 ~ div .section wix-iframe > div,
-.page.kz-h-7600 ~ div .section wix-iframe iframe { height: 7600px !important; }
+.page.kz-h-7600 ~ div .section wix-iframe iframe {
+  height: 7600px !important;
+  min-height: 7600px !important;
+  max-height: 7600px !important;
+}
 
+.page.kz-h-7700 ~ div .section:has(wix-iframe),
+.page.kz-h-7700 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-7700 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-7700 ~ div .section div:has(> wix-iframe),
 .page.kz-h-7700 ~ div .section wix-iframe > div,
-.page.kz-h-7700 ~ div .section wix-iframe iframe { height: 7700px !important; }
+.page.kz-h-7700 ~ div .section wix-iframe iframe {
+  height: 7700px !important;
+  min-height: 7700px !important;
+  max-height: 7700px !important;
+}
 
+.page.kz-h-7800 ~ div .section:has(wix-iframe),
+.page.kz-h-7800 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-7800 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-7800 ~ div .section div:has(> wix-iframe),
 .page.kz-h-7800 ~ div .section wix-iframe > div,
-.page.kz-h-7800 ~ div .section wix-iframe iframe { height: 7800px !important; }
+.page.kz-h-7800 ~ div .section wix-iframe iframe {
+  height: 7800px !important;
+  min-height: 7800px !important;
+  max-height: 7800px !important;
+}
 
+.page.kz-h-7900 ~ div .section:has(wix-iframe),
+.page.kz-h-7900 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-7900 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-7900 ~ div .section div:has(> wix-iframe),
 .page.kz-h-7900 ~ div .section wix-iframe > div,
-.page.kz-h-7900 ~ div .section wix-iframe iframe { height: 7900px !important; }
+.page.kz-h-7900 ~ div .section wix-iframe iframe {
+  height: 7900px !important;
+  min-height: 7900px !important;
+  max-height: 7900px !important;
+}
 
+.page.kz-h-8000 ~ div .section:has(wix-iframe),
+.page.kz-h-8000 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-8000 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-8000 ~ div .section div:has(> wix-iframe),
 .page.kz-h-8000 ~ div .section wix-iframe > div,
-.page.kz-h-8000 ~ div .section wix-iframe iframe { height: 8000px !important; }
+.page.kz-h-8000 ~ div .section wix-iframe iframe {
+  height: 8000px !important;
+  min-height: 8000px !important;
+  max-height: 8000px !important;
+}
 
+.page.kz-h-8100 ~ div .section:has(wix-iframe),
+.page.kz-h-8100 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-8100 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-8100 ~ div .section div:has(> wix-iframe),
 .page.kz-h-8100 ~ div .section wix-iframe > div,
-.page.kz-h-8100 ~ div .section wix-iframe iframe { height: 8100px !important; }
+.page.kz-h-8100 ~ div .section wix-iframe iframe {
+  height: 8100px !important;
+  min-height: 8100px !important;
+  max-height: 8100px !important;
+}
 
+.page.kz-h-8200 ~ div .section:has(wix-iframe),
+.page.kz-h-8200 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-8200 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-8200 ~ div .section div:has(> wix-iframe),
 .page.kz-h-8200 ~ div .section wix-iframe > div,
-.page.kz-h-8200 ~ div .section wix-iframe iframe { height: 8200px !important; }
+.page.kz-h-8200 ~ div .section wix-iframe iframe {
+  height: 8200px !important;
+  min-height: 8200px !important;
+  max-height: 8200px !important;
+}
 
+.page.kz-h-8300 ~ div .section:has(wix-iframe),
+.page.kz-h-8300 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-8300 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-8300 ~ div .section div:has(> wix-iframe),
 .page.kz-h-8300 ~ div .section wix-iframe > div,
-.page.kz-h-8300 ~ div .section wix-iframe iframe { height: 8300px !important; }
+.page.kz-h-8300 ~ div .section wix-iframe iframe {
+  height: 8300px !important;
+  min-height: 8300px !important;
+  max-height: 8300px !important;
+}
 
+.page.kz-h-8400 ~ div .section:has(wix-iframe),
+.page.kz-h-8400 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-8400 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-8400 ~ div .section div:has(> wix-iframe),
 .page.kz-h-8400 ~ div .section wix-iframe > div,
-.page.kz-h-8400 ~ div .section wix-iframe iframe { height: 8400px !important; }
+.page.kz-h-8400 ~ div .section wix-iframe iframe {
+  height: 8400px !important;
+  min-height: 8400px !important;
+  max-height: 8400px !important;
+}
 
+.page.kz-h-8500 ~ div .section:has(wix-iframe),
+.page.kz-h-8500 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-8500 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-8500 ~ div .section div:has(> wix-iframe),
 .page.kz-h-8500 ~ div .section wix-iframe > div,
-.page.kz-h-8500 ~ div .section wix-iframe iframe { height: 8500px !important; }
+.page.kz-h-8500 ~ div .section wix-iframe iframe {
+  height: 8500px !important;
+  min-height: 8500px !important;
+  max-height: 8500px !important;
+}
 
+.page.kz-h-8600 ~ div .section:has(wix-iframe),
+.page.kz-h-8600 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-8600 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-8600 ~ div .section div:has(> wix-iframe),
 .page.kz-h-8600 ~ div .section wix-iframe > div,
-.page.kz-h-8600 ~ div .section wix-iframe iframe { height: 8600px !important; }
+.page.kz-h-8600 ~ div .section wix-iframe iframe {
+  height: 8600px !important;
+  min-height: 8600px !important;
+  max-height: 8600px !important;
+}
 
+.page.kz-h-8700 ~ div .section:has(wix-iframe),
+.page.kz-h-8700 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-8700 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-8700 ~ div .section div:has(> wix-iframe),
 .page.kz-h-8700 ~ div .section wix-iframe > div,
-.page.kz-h-8700 ~ div .section wix-iframe iframe { height: 8700px !important; }
+.page.kz-h-8700 ~ div .section wix-iframe iframe {
+  height: 8700px !important;
+  min-height: 8700px !important;
+  max-height: 8700px !important;
+}
 
+.page.kz-h-8800 ~ div .section:has(wix-iframe),
+.page.kz-h-8800 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-8800 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-8800 ~ div .section div:has(> wix-iframe),
 .page.kz-h-8800 ~ div .section wix-iframe > div,
-.page.kz-h-8800 ~ div .section wix-iframe iframe { height: 8800px !important; }
+.page.kz-h-8800 ~ div .section wix-iframe iframe {
+  height: 8800px !important;
+  min-height: 8800px !important;
+  max-height: 8800px !important;
+}
 
+.page.kz-h-8900 ~ div .section:has(wix-iframe),
+.page.kz-h-8900 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-8900 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-8900 ~ div .section div:has(> wix-iframe),
 .page.kz-h-8900 ~ div .section wix-iframe > div,
-.page.kz-h-8900 ~ div .section wix-iframe iframe { height: 8900px !important; }
+.page.kz-h-8900 ~ div .section wix-iframe iframe {
+  height: 8900px !important;
+  min-height: 8900px !important;
+  max-height: 8900px !important;
+}
 
+.page.kz-h-9000 ~ div .section:has(wix-iframe),
+.page.kz-h-9000 ~ div .section:has(wix-iframe) > div,
+.page.kz-h-9000 ~ div .section:has(wix-iframe) > div > div,
+.page.kz-h-9000 ~ div .section div:has(> wix-iframe),
 .page.kz-h-9000 ~ div .section wix-iframe > div,
-.page.kz-h-9000 ~ div .section wix-iframe iframe { height: 9000px !important; }
-
-.page.kz-h-9100 ~ div .section wix-iframe > div,
-.page.kz-h-9100 ~ div .section wix-iframe iframe { height: 9100px !important; }
-
-.page.kz-h-9200 ~ div .section wix-iframe > div,
-.page.kz-h-9200 ~ div .section wix-iframe iframe { height: 9200px !important; }
-
-.page.kz-h-9300 ~ div .section wix-iframe > div,
-.page.kz-h-9300 ~ div .section wix-iframe iframe { height: 9300px !important; }
-
-.page.kz-h-9400 ~ div .section wix-iframe > div,
-.page.kz-h-9400 ~ div .section wix-iframe iframe { height: 9400px !important; }
-
-.page.kz-h-9500 ~ div .section wix-iframe > div,
-.page.kz-h-9500 ~ div .section wix-iframe iframe { height: 9500px !important; }
-
-.page.kz-h-9600 ~ div .section wix-iframe > div,
-.page.kz-h-9600 ~ div .section wix-iframe iframe { height: 9600px !important; }
-
-.page.kz-h-9700 ~ div .section wix-iframe > div,
-.page.kz-h-9700 ~ div .section wix-iframe iframe { height: 9700px !important; }
-
-.page.kz-h-9800 ~ div .section wix-iframe > div,
-.page.kz-h-9800 ~ div .section wix-iframe iframe { height: 9800px !important; }
-
-.page.kz-h-9900 ~ div .section wix-iframe > div,
-.page.kz-h-9900 ~ div .section wix-iframe iframe { height: 9900px !important; }
-
-.page.kz-h-10000 ~ div .section wix-iframe > div,
-.page.kz-h-10000 ~ div .section wix-iframe iframe { height: 10000px !important; }
-
-.page.kz-h-10100 ~ div .section wix-iframe > div,
-.page.kz-h-10100 ~ div .section wix-iframe iframe { height: 10100px !important; }
-
-.page.kz-h-10200 ~ div .section wix-iframe > div,
-.page.kz-h-10200 ~ div .section wix-iframe iframe { height: 10200px !important; }
-
-.page.kz-h-10300 ~ div .section wix-iframe > div,
-.page.kz-h-10300 ~ div .section wix-iframe iframe { height: 10300px !important; }
-
-.page.kz-h-10400 ~ div .section wix-iframe > div,
-.page.kz-h-10400 ~ div .section wix-iframe iframe { height: 10400px !important; }
-
-.page.kz-h-10500 ~ div .section wix-iframe > div,
-.page.kz-h-10500 ~ div .section wix-iframe iframe { height: 10500px !important; }
-
-.page.kz-h-10600 ~ div .section wix-iframe > div,
-.page.kz-h-10600 ~ div .section wix-iframe iframe { height: 10600px !important; }
-
-.page.kz-h-10700 ~ div .section wix-iframe > div,
-.page.kz-h-10700 ~ div .section wix-iframe iframe { height: 10700px !important; }
-
-.page.kz-h-10800 ~ div .section wix-iframe > div,
-.page.kz-h-10800 ~ div .section wix-iframe iframe { height: 10800px !important; }
-
-.page.kz-h-10900 ~ div .section wix-iframe > div,
-.page.kz-h-10900 ~ div .section wix-iframe iframe { height: 10900px !important; }
-
-.page.kz-h-11000 ~ div .section wix-iframe > div,
-.page.kz-h-11000 ~ div .section wix-iframe iframe { height: 11000px !important; }
-
-.page.kz-h-11100 ~ div .section wix-iframe > div,
-.page.kz-h-11100 ~ div .section wix-iframe iframe { height: 11100px !important; }
-
-.page.kz-h-11200 ~ div .section wix-iframe > div,
-.page.kz-h-11200 ~ div .section wix-iframe iframe { height: 11200px !important; }
-
-.page.kz-h-11300 ~ div .section wix-iframe > div,
-.page.kz-h-11300 ~ div .section wix-iframe iframe { height: 11300px !important; }
-
-.page.kz-h-11400 ~ div .section wix-iframe > div,
-.page.kz-h-11400 ~ div .section wix-iframe iframe { height: 11400px !important; }
-
-.page.kz-h-11500 ~ div .section wix-iframe > div,
-.page.kz-h-11500 ~ div .section wix-iframe iframe { height: 11500px !important; }
-
-.page.kz-h-11600 ~ div .section wix-iframe > div,
-.page.kz-h-11600 ~ div .section wix-iframe iframe { height: 11600px !important; }
-
-.page.kz-h-11700 ~ div .section wix-iframe > div,
-.page.kz-h-11700 ~ div .section wix-iframe iframe { height: 11700px !important; }
-
-.page.kz-h-11800 ~ div .section wix-iframe > div,
-.page.kz-h-11800 ~ div .section wix-iframe iframe { height: 11800px !important; }
-
-.page.kz-h-11900 ~ div .section wix-iframe > div,
-.page.kz-h-11900 ~ div .section wix-iframe iframe { height: 11900px !important; }
-
-.page.kz-h-12000 ~ div .section wix-iframe > div,
-.page.kz-h-12000 ~ div .section wix-iframe iframe { height: 12000px !important; }
+.page.kz-h-9000 ~ div .section wix-iframe iframe {
+  height: 9000px !important;
+  min-height: 9000px !important;
+  max-height: 9000px !important;
+}

@@ -1,5 +1,9 @@
 import wixWindow from 'wix-window';
+import wixLocation from 'wix-location';
 import { getHighlights } from 'backend/menu.web';
+
+// Iframe'den gelen gezinme istekleri yalnizca bu adresle baslayabilir.
+const SITE_ORIGIN = 'https://nepagy.wixstudio.com/';
 
 /*
  * Ana sayfa tek bir HtmlComponent'ten (#html1) olusuyor.
@@ -17,9 +21,11 @@ import { getHighlights } from 'backend/menu.web';
 
 const EMBED_URL = 'https://enesatmaca00.github.io/kuzela/';
 
+// Sinirlar global.css'te uretilen kz-h-* kurallarinin araligiyla ayni olmali,
+// yoksa sinif eklenir ama karsiligi olan kural bulunmaz.
 const HEIGHT_STEP = 100;
-const MIN_HEIGHT = 1000;
-const MAX_HEIGHT = 12000;
+const MIN_HEIGHT = 2000;
+const MAX_HEIGHT = 9000;
 
 function heightClassFor(rawHeight) {
     const clamped = Math.min(MAX_HEIGHT, Math.max(MIN_HEIGHT, Math.ceil(rawHeight)));
@@ -34,14 +40,6 @@ $w.onReady(function () {
     if (typeof app.show === 'function') app.show();
     if (typeof app.expand === 'function') app.expand();
 
-    // global.css'teki "kapsayicilar icerige sarilsin" blogu bu sinifa bakiyor.
-    // Olmazsa dar ekranda bolum, editorden gelen sabit yuksekligi koruyup
-    // sayfanin altinda kocaman bir bosluk birakiyor.
-    try {
-        page.customClassList.add('kz-embed-page');
-    } catch (error) {
-        // customClassList her breakpoint'te hazir olmayabilir.
-    }
 
     // Sayfada tek kaydirma cubugu olsun diye iframe'in kendi scroll'u olmamali.
     // Bunu `app.scrolling` ile yapmiyoruz: `src` ile ayni anda atandiginda Wix
@@ -110,6 +108,16 @@ $w.onReady(function () {
         if (data.type === 'kuzelaHomeHeight') {
             const height = Number(data.height);
             if (Number.isFinite(height) && height > 0) applyHeight(height);
+            return;
+        }
+
+        if (data.type === 'kuzelaNavigate') {
+            // Kartlar iframe icinde target="_top" ile calisiyordu ama Wix'in
+            // sandbox'li iframe'i ust pencereye gitmeye izin vermiyor, bu
+            // yuzden tiklayinca hicbir sey olmuyordu. Gezinmeyi burada
+            // yapiyoruz. Sadece bu sitenin kendi adreslerine izin veriliyor.
+            const target = String(data.url || '');
+            if (target.indexOf(SITE_ORIGIN) === 0) wixLocation.to(target);
             return;
         }
 

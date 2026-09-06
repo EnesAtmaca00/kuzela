@@ -253,6 +253,29 @@ class KuzelaHome extends HTMLElement {
     const announceReady = () => window.parent.postMessage({ type: 'kuzelaReady' }, '*');
     [0, 300, 1000, 2500].forEach((ms) => setTimeout(announceReady, ms));
 
+    /* ---------- dis baglantilar ---------- */
+    // Kartlar ve butonlar target="_top" ile calisiyordu, ama Wix'in gomulu
+    // iframe'i sandbox'li: ust pencereye gitmeye izin verilmiyor ve tiklayinca
+    // hicbir sey olmuyordu. Gezinmeyi sayfa koduna devrediyoruz.
+    // Sayfa tek basina acildiginda (GitHub Pages) normal gezinme calisiyor.
+    root.addEventListener('click', (event) => {
+      const path = typeof event.composedPath === 'function' ? event.composedPath() : [];
+      const link = path.find((node) => node && node.tagName === 'A' && node.getAttribute('href'));
+      if (!link) return;
+
+      const href = link.getAttribute('href');
+      if (!href || href.charAt(0) === '#') return; // sayfa ici baglantilar asagida
+
+      event.preventDefault();
+      window.parent.postMessage({ type: 'kuzelaNavigate', url: href }, '*');
+      try {
+        if (window.top === window) window.location.href = href;
+        else window.top.location.href = href;
+      } catch (error) {
+        // Sandbox engelledi: gezinmeyi sayfa kodu yapacak.
+      }
+    });
+
     /* ---------- sayfa ici linkler (shadow DOM icinde otomatik calismaz) ---------- */
     root.querySelectorAll('a[href^="#"]').forEach((link) => {
       link.addEventListener('click', (event) => {
