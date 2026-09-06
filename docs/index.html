@@ -77,7 +77,7 @@ function cardsHtml(list, revealed) {
 
 // Tarayicinin hangi surumu calistirdigi konsoldan anlasilsin: "tepki yok"
 // derken eski onbellek surumu mu calisiyor, yoksa tiklama mi ulasmiyor?
-const EMBED_VERSION = 'v16';
+const EMBED_VERSION = 'v17-teshis';
 console.log('[kuzela] gomulu sayfa yuklendi, surum:', EMBED_VERSION);
 
 class KuzelaHome extends HTMLElement {
@@ -281,6 +281,18 @@ class KuzelaHome extends HTMLElement {
     // iframe'i sandbox'li: ust pencereye gitmeye izin verilmiyor ve tiklayinca
     // hicbir sey olmuyordu. Gezinmeyi sayfa koduna devrediyoruz.
     // Sayfa tek basina acildiginda (GitHub Pages) normal gezinme calisiyor.
+    // GECICI TESHIS: iframe'in konsolu disaridan gorunmuyor, bu yuzden ne
+    // oldugunu dogrudan ekrana yaziyoruz. Kullanici tiklayip okuyabilsin.
+    const debugBox = document.createElement('div');
+    debugBox.style.cssText = 'position:fixed;left:0;right:0;top:0;z-index:99999;'
+      + 'background:#11120f;color:#d9f24f;font:600 12px/1.5 monospace;'
+      + 'padding:8px 10px;white-space:pre-wrap;word-break:break-all;display:none';
+    document.body.appendChild(debugBox);
+    const debugSay = (text) => {
+      debugBox.style.display = 'block';
+      debugBox.textContent = `[${EMBED_VERSION}] ${text}`;
+    };
+
     const followLink = (event, link) => {
       const href = link && link.getAttribute('href');
       if (!href || href.charAt(0) === '#') return; // sayfa ici baglantilar asagida
@@ -295,7 +307,34 @@ class KuzelaHome extends HTMLElement {
       // ac calisiyordu, sol tik calismiyordu - engelleyen bizdik).
       // Simdi iki yol da acik: tarayici gidebiliyorsa gider, sandbox
       // engellerse asagidaki mesajla sayfa kodu goturur.
-      window.parent.postMessage({ type: 'kuzelaNavigate', url: href, page: link.getAttribute('data-kz-page') || '' }, '*');
+      let rapor = '1) tiklama yakalandi
+2) adres: ' + href;
+
+      try {
+        window.parent.postMessage({ type: 'kuzelaNavigate', url: href, page: link.getAttribute('data-kz-page') || '' }, '*');
+        rapor += '
+3) mesaj gonderildi: EVET';
+      } catch (error) {
+        rapor += '
+3) mesaj gonderildi: HAYIR (' + ((error && error.message) || error) + ')';
+      }
+
+      // Tarayicinin kendi gezinmesi engellenirse ust pencereyi elle deneyelim.
+      setTimeout(() => {
+        try {
+          if (window.top === window) window.location.href = href;
+          else window.top.location.href = href;
+          rapor += '
+4) ust pencere gezinmesi denendi';
+        } catch (error) {
+          rapor += '
+4) ust pencere ENGELLENDI: ' + ((error && error.message) || error);
+        }
+        debugSay(rapor + '
+5) hala buradaysan gezinme calismadi');
+      }, 250);
+
+      debugSay(rapor);
     };
 
     // Once dogrudan dinleyici: her baglantiya tek tek baglaniyor. Kartlar
