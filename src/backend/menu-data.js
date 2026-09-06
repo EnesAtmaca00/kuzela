@@ -14,7 +14,7 @@ import { items, menus, sections } from '@wix/restaurants';
 
 // Yayindaki paketin bu dosyanin guncel halini icerip icermedigini
 // anlamak icin. Degisiklik yaptikca artiriliyor.
-export const DATA_MODULE_VERSION = 'v4-id-join';
+export const DATA_MODULE_VERSION = 'v6-hidden-sections';
 
 const HIGHLIGHT_COUNT = 6;
 
@@ -143,8 +143,12 @@ export async function loadHighlights(wrap, stages) {
     // bildiriyor ama filtreli cagri 0 bolum getiriyordu). Hepsini cekip id ile
     // eslestirmek hem calisiyor hem de bu menu icin ucuz: 8 bolum, 38 urun.
     const sectionsResponse = await listSections({ paging: { limit: 100 } });
-    const sectionList = (sectionsResponse && sectionsResponse.sections) || [];
-    note('sectionsFetched', sectionList.length);
+    const allSections = (sectionsResponse && sectionsResponse.sections) || [];
+    note('sectionsFetched', allSections.length);
+    // Bolum gizliyse icindeki urunler tek tek gorunur olsa bile ana sayfada
+    // yer almamali: "Belegde broodjes" gizliydi ama urunu karta dusuyordu.
+    const sectionList = allSections.filter((section) => section.visible !== false);
+    note('sectionsVisible', sectionList.length);
     const sectionById = new Map(sectionList.map((s) => [idOf(s), s]).filter(([id]) => id));
 
     // Bolumleri menudeki siraya gore geziyoruz; listSections sirayi korumuyor.
