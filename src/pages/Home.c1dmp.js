@@ -27,6 +27,24 @@ const HEIGHT_STEP = 100;
 const MIN_HEIGHT = 2000;
 const MAX_HEIGHT = 9000;
 
+function navigateTo(rawUrl) {
+    const target = String(rawUrl || '');
+    // Iframe baska bir origin'de; yalnizca bu sitenin adreslerine izin var.
+    if (target.indexOf(SITE_ORIGIN) !== 0) return;
+
+    // wixLocation.to() site koku baz alinan goreli yolu guvenilir isliyor.
+    // Mutlak adres verildiginde bazi kurulumlarda sessizce hicbir sey yapmiyor,
+    // bu yuzden once goreli yola cevirmeyi deniyoruz.
+    const base = String(wixLocation.baseUrl || '').replace(/\/+$/, '');
+    const path = base && target.indexOf(base) === 0 ? target.slice(base.length) : '';
+
+    try {
+        wixLocation.to(path || target);
+    } catch (error) {
+        console.warn('[kuzela] gezinme basarisiz:', target, (error && error.message) || error);
+    }
+}
+
 function heightClassFor(rawHeight) {
     const clamped = Math.min(MAX_HEIGHT, Math.max(MIN_HEIGHT, Math.ceil(rawHeight)));
     const stepped = Math.ceil(clamped / HEIGHT_STEP) * HEIGHT_STEP;
@@ -36,6 +54,9 @@ function heightClassFor(rawHeight) {
 $w.onReady(function () {
     const app = $w('#html1');
     const page = $w('#page1');
+
+    // Gezinme goreli yola cevrilirken kullaniliyor; sorun cikarsa degeri lazim.
+    console.log('[kuzela] baseUrl:', wixLocation.baseUrl);
 
     if (typeof app.show === 'function') app.show();
     if (typeof app.expand === 'function') app.expand();
@@ -116,13 +137,7 @@ $w.onReady(function () {
             // sandbox'li iframe'i ust pencereye gitmeye izin vermiyor, bu
             // yuzden tiklayinca hicbir sey olmuyordu. Gezinmeyi burada
             // yapiyoruz. Sadece bu sitenin kendi adreslerine izin veriliyor.
-            const target = String(data.url || '');
-            if (target.indexOf(SITE_ORIGIN) !== 0) return;
-            try {
-                wixLocation.to(target);
-            } catch (error) {
-                console.warn('[kuzela] gezinme basarisiz:', target, (error && error.message) || error);
-            }
+            navigateTo(data.url);
             return;
         }
 
