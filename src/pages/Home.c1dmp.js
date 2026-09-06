@@ -117,7 +117,12 @@ $w.onReady(function () {
             // yuzden tiklayinca hicbir sey olmuyordu. Gezinmeyi burada
             // yapiyoruz. Sadece bu sitenin kendi adreslerine izin veriliyor.
             const target = String(data.url || '');
-            if (target.indexOf(SITE_ORIGIN) === 0) wixLocation.to(target);
+            if (target.indexOf(SITE_ORIGIN) !== 0) return;
+            try {
+                wixLocation.to(target);
+            } catch (error) {
+                console.warn('[kuzela] gezinme basarisiz:', target, (error && error.message) || error);
+            }
             return;
         }
 
