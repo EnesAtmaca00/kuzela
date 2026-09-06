@@ -68,7 +68,12 @@ $w.onReady(function () {
     // kz-h-* sinifi yuksekligi her zaman YUKARI yuvarliyor, boylece iframe
     // icerikten asla kisa kalmiyor ve tasma olmadigi icin scroll cikmiyor.
     if (EMBED_URL) {
-        app.src = EMBED_URL;
+        // GitHub Pages gomulu sayfayi "Cache-Control: max-age=600" ile veriyor,
+        // yani docs/index.html degisikligi siteye 10 dakikaya kadar gec ulasiyor.
+        // Adrese dakikada bir degisen bir surum ekleyerek gecikmeyi 1 dakikaya
+        // indiriyoruz; ayni dakika icindeki tekrar ziyaretler yine onbellekten.
+        const bucket = Math.floor(Date.now() / 60000);
+        app.src = `${EMBED_URL}?v=${bucket}`;
     }
 
     let appliedClass = null;
