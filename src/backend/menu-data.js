@@ -14,7 +14,7 @@ import { items, menus, sections } from '@wix/restaurants';
 
 // Yayindaki paketin bu dosyanin guncel halini icerip icermedigini
 // anlamak icin. Degisiklik yaptikca artiriliyor.
-export const DATA_MODULE_VERSION = 'v6-hidden-sections';
+export const DATA_MODULE_VERSION = 'v12-item-links';
 
 const HIGHLIGHT_COUNT = 6;
 
@@ -109,9 +109,14 @@ function isEligible(item) {
     return Boolean(formattedPrice(item));
 }
 
-function toCard(item) {
+// Siparis sayfasi urunu bir lightbox icinde aciyor ve bunun icin uc kimlik
+// istiyor: itemId + sectionId + menuId. Ucunu de karta koyuyoruz ki
+// tiklayinca genel siparis sayfasi degil, o urun acilsin.
+function toCard(item, sectionId, menuId) {
     return {
         id: idOf(item),
+        sectionId: sectionId || '',
+        menuId: menuId || '',
         name: item.name || '',
         note: (item.description || '').trim(),
         price: formattedPrice(item),
@@ -135,6 +140,7 @@ export async function loadHighlights(wrap, stages) {
     const menu = menuList.find((entry) => entry.visible !== false) || menuList[0];
     if (!menu) return [];
 
+    const menuId = idOf(menu);
     const sectionIds = (menu.sectionIds || []).filter(Boolean);
     note('sectionIds', sectionIds.length);
     if (!sectionIds.length) return [];
@@ -169,9 +175,13 @@ export async function loadHighlights(wrap, stages) {
     note('sections', orderedSections.length);
 
     const itemIds = [];
+    // Derin baglanti icin her urunun hangi bolumde oldugunu biliyor olmaliyiz.
+    const sectionIdByItemId = new Map();
     for (const section of orderedSections) {
         for (const id of section.itemIds || []) {
-            if (id && !itemIds.includes(id)) itemIds.push(id);
+            if (!id) continue;
+            if (!itemIds.includes(id)) itemIds.push(id);
+            if (!sectionIdByItemId.has(id)) sectionIdByItemId.set(id, idOf(section));
         }
     }
     note('itemIds', itemIds.length);
@@ -226,5 +236,5 @@ export async function loadHighlights(wrap, stages) {
     note('picked', picked.length);
     note('pref', PREFERRED_ITEM_NAMES.join(','));
     note('names', picked.map((i) => i.name).join(' | '));
-    return picked.map(toCard);
+    return picked.map((item) => toCard(item, sectionIdByItemId.get(idOf(item)), menuId));
 }

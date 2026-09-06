@@ -46,13 +46,25 @@ const escapeHtml = (value) => String(value == null ? '' : value)
   .replace(/"/g, '&quot;')
   .replace(/'/g, '&#39;');
 
+// Siparis sayfasi urunu lightbox'ta aciyor; bunun icin uc kimlik gerekiyor.
+// Kimlikler yoksa (yedek liste) genel siparis sayfasina dusuyoruz.
+function itemUrl(item) {
+  if (!item.id || !item.sectionId || !item.menuId) return ORDER_URL;
+  const q = 'lightboxOnScreen=true'
+    + '&itemId=' + encodeURIComponent(item.id)
+    + '&sectionId=' + encodeURIComponent(item.sectionId)
+    + '&menuId=' + encodeURIComponent(item.menuId);
+  return ORDER_URL + '?' + q;
+}
+
 function cardsHtml(list, revealed) {
   return list.map((item, index) => {
     const name = escapeHtml(item.name);
+    const href = escapeHtml(itemUrl(item));
     const alt = escapeHtml(item.alt || `${item.name} bij Kuzela The Bowl House`);
     return `
   <article class="product reveal${revealed ? ' visible' : ''}" style="--delay:${index * 70}ms">
-    <a href="${ORDER_URL}" data-kz-page="order" target="_top" aria-label="Bestel ${name}">
+    <a href="${href}" data-kz-page="order" target="_top" aria-label="Bestel ${name}">
       <div class="photo">
         <img src="${escapeHtml(item.image)}" alt="${alt}" loading="lazy">
         <span>${String(index + 1).padStart(2, '0')}</span>
@@ -65,7 +77,7 @@ function cardsHtml(list, revealed) {
 
 // Tarayicinin hangi surumu calistirdigi konsoldan anlasilsin: "tepki yok"
 // derken eski onbellek surumu mu calisiyor, yoksa tiklama mi ulasmiyor?
-const EMBED_VERSION = 'v11-resolve';
+const EMBED_VERSION = 'v12-item-links';
 console.log('[kuzela] gomulu sayfa yuklendi, surum:', EMBED_VERSION);
 
 class KuzelaHome extends HTMLElement {

@@ -68,13 +68,21 @@ function navigateTo(rawUrl, pageKey) {
 
     // Gomulu sayfadaki adres eskimis olabilir: mantiksal sayfa adi verildiyse
     // sitede gercekten var olan karsiligini kullaniyoruz.
+    // Derin baglantida sorgu dizesi var (?itemId=...): slug'i degistirirken
+    // onu korumak zorundayiz, yoksa urun degil genel sayfa aciliyor.
+    const queryStart = path.search(/[?#]/);
+    const pathOnly = queryStart === -1 ? path : path.slice(0, queryStart);
+    const query = queryStart === -1 ? '' : path.slice(queryStart);
+
     let finalPath = path;
     const candidates = PAGE_CANDIDATES[pageKey] || [];
     const live = candidates.find((candidate) => known.indexOf(candidate) !== -1);
-    if (live) finalPath = live;
+    if (live) finalPath = live + query;
+    else if (pathOnly) finalPath = pathOnly + query;
 
-    if (finalPath && known.length && known.indexOf(finalPath) === -1) {
-        console.warn('[kuzela] hedef sayfa sitede yok:', finalPath, '| mevcut sayfalar:', known.join(', '));
+    const finalPathOnly = live || pathOnly;
+    if (finalPathOnly && known.length && known.indexOf(finalPathOnly) === -1) {
+        console.warn('[kuzela] hedef sayfa sitede yok:', finalPathOnly, '| mevcut sayfalar:', known.join(', '));
     }
 
     try {
