@@ -1,7 +1,7 @@
 import { Permissions, webMethod } from 'wix-web-module';
 import { elevate } from 'wix-auth';
 import { auth } from '@wix/essentials';
-import { loadHighlights } from 'backend/menu-data';
+import { loadHighlights, DATA_MODULE_VERSION } from 'backend/menu-data';
 
 /*
  * Ana sayfa icin urun kartlari. Menu okumak yukseltilmis izin istedigi icin
@@ -22,7 +22,7 @@ export const getHighlights = webMethod(Permissions.Anyone, async () => {
         const stages = {};
         try {
             const items = await loadHighlights(wrap, stages);
-            if (items.length) return { items, errors, used: label, stages };
+            if (items.length) return { items, errors, used: label, stages, dataVersion: DATA_MODULE_VERSION };
             errors.push(`${label}: bos sonuc ${JSON.stringify(stages)}`);
         } catch (error) {
             // Hata yutulmuyor: menu okunamadiginda sebebini sayfa kodu

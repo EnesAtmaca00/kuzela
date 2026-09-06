@@ -12,6 +12,10 @@ import { items, menus, sections } from '@wix/restaurants';
  * izin mekanizmasindan bagimsiz kaliyor ve test edilebiliyor.
  */
 
+// Yayindaki paketin bu dosyanin guncel halini icerip icermedigini
+// anlamak icin. Degisiklik yaptikca artiriliyor.
+export const DATA_MODULE_VERSION = 'v3-pref-cola';
+
 const HIGHLIGHT_COUNT = 6;
 
 /*

@@ -116,7 +116,7 @@ $w.onReady(function () {
             }
             // Teshis: hangi kod surumunun yayinda oldugu ve secimin nasil
             // yapildigi gorunsun (bolum sirasi tutmazsa secim rastgelelesiyor).
-            console.log('[kuzela] menu yuklendi:', result.used, JSON.stringify(result.stages || {}));
+            console.log('[kuzela] menu yuklendi:', result.used, 'veri surumu:', result.dataVersion, JSON.stringify(result.stages || {}));
             products = list;
             pushProducts();
         })
