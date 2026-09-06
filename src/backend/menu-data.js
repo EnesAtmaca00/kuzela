@@ -14,35 +14,75 @@ import { items, menus, sections } from '@wix/restaurants';
 
 const HIGHLIGHT_COUNT = 6;
 
+function priceText(priceInfo) {
+    if (!priceInfo) return '';
+    if (priceInfo.formattedPrice) return priceInfo.formattedPrice;
+    // formattedPrice her ortamda gelmiyor; ham fiyat varsa kendimiz yaziyoruz.
+    const raw = Number(priceInfo.price);
+    return Number.isFinite(raw) ? `€${raw.toFixed(2)}` : '';
+}
+
 function formattedPrice(item) {
-    const direct = item && item.priceInfo && item.priceInfo.formattedPrice;
+    const direct = priceText(item && item.priceInfo);
     if (direct) return direct;
 
     // Bazi urunlerin tek fiyati yok, varyantlari var (orn. Wings 4/8/12 st).
     const variants = (item && item.priceVariants && item.priceVariants.variants) || [];
     for (const variant of variants) {
-        const price = variant && variant.priceInfo && variant.priceInfo.formattedPrice;
+        const price = priceText(variant && variant.priceInfo);
         if (price) return `vanaf ${price}`;
     }
     return '';
+}
+
+const MEDIA_BASE = 'https://static.wixstatic.com/media/';
+
+// Gorsel alani ortama gore uc farkli bicimde gelebiliyor: REST'te {url,...}
+// nesnesi, SDK'da duz medya kimligi, Velo'da ise "wix:image://v1/<id>/..."
+// URI'si. Ucunu de tek bir adrese ceviriyoruz.
+function imageUrl(item) {
+    const image = item && item.image;
+    if (!image) return '';
+
+    if (typeof image === 'object') {
+        if (image.url) return image.url;
+        return image.id ? MEDIA_BASE + image.id : '';
+    }
+
+    const raw = String(image);
+    if (!raw) return '';
+    if (raw.indexOf('http') === 0) return raw;
+    if (raw.indexOf('wix:image://') === 0) {
+        const parts = raw.replace('wix:image://', '').split('/');
+        // "v1/<mediaId>/<dosyaadi>#..." -> mediaId
+        const mediaId = parts[0] === 'v1' ? parts[1] : parts[0];
+        return mediaId ? MEDIA_BASE + mediaId.split('#')[0] : '';
+    }
+    return MEDIA_BASE + raw;
+}
+
+function imageAlt(item) {
+    const image = item && item.image;
+    if (image && typeof image === 'object' && image.altText) return image.altText;
+    return (item && item.name) || '';
 }
 
 function isEligible(item) {
     if (!item) return false;
     if (item.visible === false) return false;
     if (item.orderSettings && item.orderSettings.inStock === false) return false;
-    if (!item.image || !item.image.url) return false;
+    if (!imageUrl(item)) return false;
     return Boolean(formattedPrice(item));
 }
 
 function toCard(item) {
     return {
-        id: item.id,
+        id: item.id || '',
         name: item.name || '',
         note: (item.description || '').trim(),
         price: formattedPrice(item),
-        image: item.image.url,
-        alt: item.image.altText || item.name || ''
+        image: imageUrl(item),
+        alt: imageAlt(item)
     };
 }
 
@@ -106,8 +146,12 @@ export async function loadHighlights(wrap, stages) {
     // Bolum basina en fazla bir urun: ana sayfada cesitlilik olsun.
     // Bolum icinde "featured" isaretli urun varsa o secilir, boylece hangi
     // urunun one cikacagini restoran menu panelinden belirleyebiliyor.
+    // Urun kimligi her ortamda gelmiyor (bolumler id'siz donuyor), bu yuzden
+    // tekrar kontrolu isim uzerinden yapiliyor.
+    const keyOf = (item) => item.id || item.name || '';
+
     const picked = [];
-    const pickedIds = new Set();
+    const pickedKeys = new Set();
 
     for (const section of orderedSections) {
         const candidates = (section.itemIds || [])
@@ -115,23 +159,26 @@ export async function loadHighlights(wrap, stages) {
             .filter(isEligible);
         if (!candidates.length) continue;
         const choice = candidates.find((item) => item.featured) || candidates[0];
-        if (pickedIds.has(choice.id)) continue;
+        if (pickedKeys.has(keyOf(choice))) continue;
         picked.push(choice);
-        pickedIds.add(choice.id);
+        pickedKeys.add(keyOf(choice));
         if (picked.length >= HIGHLIGHT_COUNT) break;
     }
 
-    // Bolum sayisi yetmezse menu sirasiyla tamamla.
+    note('pickedBySection', picked.length);
+
+    // Bolum basina secim yetmezse (veya bolum-urun eslesmesi hic tutmazsa)
+    // dogrudan urun listesinden tamamla.
     if (picked.length < HIGHLIGHT_COUNT) {
-        for (const id of itemIds) {
+        for (const item of itemList) {
             if (picked.length >= HIGHLIGHT_COUNT) break;
-            if (pickedIds.has(id)) continue;
-            const item = itemById.get(id);
             if (!isEligible(item)) continue;
+            if (pickedKeys.has(keyOf(item))) continue;
             picked.push(item);
-            pickedIds.add(id);
+            pickedKeys.add(keyOf(item));
         }
     }
 
+    note('picked', picked.length);
     return picked.map(toCard);
 }
