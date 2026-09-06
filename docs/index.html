@@ -77,7 +77,7 @@ function cardsHtml(list, revealed) {
 
 // Tarayicinin hangi surumu calistirdigi konsoldan anlasilsin: "tepki yok"
 // derken eski onbellek surumu mu calisiyor, yoksa tiklama mi ulasmiyor?
-const EMBED_VERSION = 'v15-probe';
+const EMBED_VERSION = 'v16';
 console.log('[kuzela] gomulu sayfa yuklendi, surum:', EMBED_VERSION);
 
 class KuzelaHome extends HTMLElement {
@@ -269,18 +269,6 @@ class KuzelaHome extends HTMLElement {
       if (!data || typeof data !== 'object') return;
       if (data.type === 'kuzelaAskHeight') sendHeight(true);
       if (data.type === 'kuzelaProducts') applyProducts(data.items);
-      if (data.type === 'kuzelaProbe') {
-        // Gecici teshis: gercek kart tiklamasini disaridan tetikler ve ne
-        // bulundugunu geri bildirir.
-        const card = root.querySelector('.product a');
-        window.parent.postMessage({
-          type: 'kuzelaProbeInfo',
-          surum: EMBED_VERSION,
-          kartVar: !!card,
-          href: card ? card.getAttribute('href') : null
-        }, '*');
-        if (card && data.tikla) card.click();
-      }
     });
 
     // Sayfa kodu, iframe hazir olmadan urunleri gondermis olabilir.
