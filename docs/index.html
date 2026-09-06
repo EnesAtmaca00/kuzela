@@ -234,6 +234,7 @@ class KuzelaHome extends HTMLElement {
       // reveal animasyonunu bastan oynatmak yerine dogrudan yerine koyuyoruz.
       grid.innerHTML = cardsHtml(list.slice(0, 8), true);
       productSource = 'menu';
+      bindLinks(); // yeni kartlarin baglantilarina dinleyici bagla
       grid.querySelectorAll('img').forEach((img) => {
         img.addEventListener('load', queueSend);
         img.addEventListener('error', queueSend);
@@ -246,6 +247,12 @@ class KuzelaHome extends HTMLElement {
       if (!data || typeof data !== 'object') return;
       if (data.type === 'kuzelaAskHeight') sendHeight(true);
       if (data.type === 'kuzelaProducts') applyProducts(data.items);
+      if (data.type === 'kuzelaTestCardClick') {
+        // Gecici: gomulu sayfada gercek kart tiklamasini disaridan tetikler.
+        const card = root.querySelector('.product a');
+        window.parent.postMessage({ type: 'kuzelaTestCardInfo', varMi: !!card, href: card ? card.getAttribute('href') : null }, '*');
+        if (card) card.click();
+      }
     });
 
     // Sayfa kodu, iframe hazir olmadan urunleri gondermis olabilir.
@@ -258,13 +265,10 @@ class KuzelaHome extends HTMLElement {
     // iframe'i sandbox'li: ust pencereye gitmeye izin verilmiyor ve tiklayinca
     // hicbir sey olmuyordu. Gezinmeyi sayfa koduna devrediyoruz.
     // Sayfa tek basina acildiginda (GitHub Pages) normal gezinme calisiyor.
-    root.addEventListener('click', (event) => {
-      const path = typeof event.composedPath === 'function' ? event.composedPath() : [];
-      const link = path.find((node) => node && node.tagName === 'A' && node.getAttribute('href'));
-      if (!link) return;
-
-      const href = link.getAttribute('href');
+    const followLink = (event, link) => {
+      const href = link && link.getAttribute('href');
       if (!href || href.charAt(0) === '#') return; // sayfa ici baglantilar asagida
+      if (event.defaultPrevented) return;          // zaten ele alindi
 
       event.preventDefault();
       window.parent.postMessage({ type: 'kuzelaNavigate', url: href }, '*');
@@ -274,6 +278,24 @@ class KuzelaHome extends HTMLElement {
       } catch (error) {
         // Sandbox engelledi: gezinmeyi sayfa kodu yapacak.
       }
+    };
+
+    // Once dogrudan dinleyici: her baglantiya tek tek baglaniyor. Kartlar
+    // menu verisi gelince yeniden ciziliyor, o yuzden bindLinks tekrar cagriliyor.
+    const bindLinks = () => {
+      root.querySelectorAll('a[href]').forEach((link) => {
+        if (link.__kzBound) return;
+        link.__kzBound = true;
+        link.addEventListener('click', (event) => followLink(event, link));
+      });
+    };
+    bindLinks();
+
+    // Yedek olarak delegasyon da duruyor (dogrudan dinleyici kacirirsa).
+    root.addEventListener('click', (event) => {
+      const path = typeof event.composedPath === 'function' ? event.composedPath() : [];
+      const link = path.find((node) => node && node.tagName === 'A' && node.getAttribute('href'));
+      if (link) followLink(event, link);
     });
 
     /* ---------- sayfa ici linkler (shadow DOM icinde otomatik calismaz) ---------- */
