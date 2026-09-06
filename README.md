@@ -131,3 +131,12 @@ iframe'i boyutlandirmak kutuyu buyutebiliyor ama kucultemiyordu; dar ekranda
 sayfanin altinda binlerce piksel bosluk kaliyordu. `min-height: 0` ve
 `height: auto` de ise yaramadi (canli sayfada olculdu), bu yuzden olculen
 yukseklik bolum, ara kapsayicilar, bilesen ve iframe'e aciktan yaziliyor.
+
+### Onemli: degisiklikler 10 dakikaya kadar gecikebilir
+
+GitHub Pages `Cache-Control: max-age=600` gonderiyor. `docs/index.html`
+degistirip push ettikten sonra sitedeki gomulu icerik **10 dakikaya kadar**
+eski kalabilir; tarayicinin kendi onbellegi de ayni sureyi tutuyor. Bir
+degisikligin canliya gecmedigini dusunmeden once 10 dakika bekleyip sayfayi
+sert yenile (Ctrl+F5). Test ederken bu yuzden yanlis "calismiyor" sonucu
+cikarmak cok kolay.
