@@ -18,9 +18,15 @@
 // ve yayinlandi (eski adres artik 404). Slug degisirse burasi guncellenmeli;
 // dogrulamayi tarayicida yap - Wix 404 sayfasini HTTP 200 ile servis ettigi
 // icin curl ve site haritasi yaniltiyor.
-const ORDER_URL = 'https://nepagy.wixstudio.com/my-site-2/bestel-nu';
-const ABOUT_URL = 'https://nepagy.wixstudio.com/my-site-2/over-ons';
-const CONTACT_URL = 'https://nepagy.wixstudio.com/my-site-2/contact';
+// Sitenin kok adresi. Wix'te site adresi degisirse (orn. /my-site-2 -> /kuzela)
+// yalnizca burasi guncellenir. Adres yanlissa sayfa kodu adresi site koküyle
+// eslestiremiyor ve derin baglantinin sorgu dizesini dusuruyor: kart urune
+// degil sade siparis sayfasina gidiyor.
+const SITE_BASE = 'https://nepagy.wixstudio.com/kuzela';
+
+const ORDER_URL = `${SITE_BASE}/bestel-nu`;
+const ABOUT_URL = `${SITE_BASE}/over-ons`;
+const CONTACT_URL = `${SITE_BASE}/contact`;
 
 /*
  * Urun kartlari artik Wix Restaurants menusunden geliyor: sayfa kodu
@@ -77,7 +83,7 @@ function cardsHtml(list, revealed) {
 
 // Tarayicinin hangi surumu calistirdigi konsoldan anlasilsin: "tepki yok"
 // derken eski onbellek surumu mu calisiyor, yoksa tiklama mi ulasmiyor?
-const EMBED_VERSION = 'v18-no-rerender';
+const EMBED_VERSION = 'v19-kuzela-base';
 console.log('[kuzela] gomulu sayfa yuklendi, surum:', EMBED_VERSION);
 
 class KuzelaHome extends HTMLElement {
