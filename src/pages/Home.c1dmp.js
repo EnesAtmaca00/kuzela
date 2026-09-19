@@ -70,9 +70,13 @@ function navigateTo(rawUrl, pageKey) {
     // sitede gercekten var olan karsiligini kullaniyoruz.
     // Derin baglantida sorgu dizesi var (?itemId=...): slug'i degistirirken
     // onu korumak zorundayiz, yoksa urun degil genel sayfa aciliyor.
-    const queryStart = path.search(/[?#]/);
-    const pathOnly = queryStart === -1 ? path : path.slice(0, queryStart);
-    const query = queryStart === -1 ? '' : path.slice(queryStart);
+    // Sorgu dizesini tam adresten aliyoruz, site koküne gore kesilmis yoldan
+    // degil: site adresi degisince (/my-site-2 -> /kuzela) yol bos kaliyor ve
+    // urun kimligi dusuyordu, kart urune degil sade siparis sayfasina gidiyordu.
+    const targetQueryStart = target.search(/[?#]/);
+    const query = targetQueryStart === -1 ? '' : target.slice(targetQueryStart);
+    const pathQueryStart = path.search(/[?#]/);
+    const pathOnly = pathQueryStart === -1 ? path : path.slice(0, pathQueryStart);
 
     let finalPath = path;
     const candidates = PAGE_CANDIDATES[pageKey] || [];
@@ -102,12 +106,8 @@ $w.onReady(function () {
     const app = $w('#html1');
     const page = $w('#page1');
 
-    // Gezinme goreli yola cevrilirken kullaniliyor; sorun cikarsa degeri lazim.
-    console.log('[kuzela] baseUrl:', wixLocation.baseUrl);
-
     if (typeof app.show === 'function') app.show();
     if (typeof app.expand === 'function') app.expand();
-
 
     // Sayfada tek kaydirma cubugu olsun diye iframe'in kendi scroll'u olmamali.
     // Bunu `app.scrolling` ile yapmiyoruz: `src` ile ayni anda atandiginda Wix
@@ -143,11 +143,16 @@ $w.onReady(function () {
     // cagiramiyor; veriyi burada okuyup postMessage ile gonderiyoruz.
     let products = null;
     let iframeAlive = false;
+    // Liste iframe basina bir kez gonderiliyor. Eskiden her mesajda (saniyede
+    // bir gelen yukseklik mesajlari dahil) tekrar gidiyordu ve kartlari
+    // surekli yeniden cizdirip gercek tiklamalari bozuyordu.
+    let delivered = false;
 
     function pushProducts() {
-        if (!iframeAlive || !products || !products.length) return;
+        if (delivered || !iframeAlive || !products || !products.length) return;
         try {
             app.postMessage({ type: 'kuzelaProducts', items: products });
+            delivered = true;
         } catch (error) {
             // Iframe henuz hazir degilse bir sonraki mesajinda tekrar denenecek.
         }
@@ -161,9 +166,6 @@ $w.onReady(function () {
                 console.warn('[kuzela] menu okunamadi:', (result && result.errors) || result);
                 return;
             }
-            // Teshis: hangi kod surumunun yayinda oldugu ve secimin nasil
-            // yapildigi gorunsun (bolum sirasi tutmazsa secim rastgelelesiyor).
-            console.log('[kuzela] menu yuklendi:', result.used, 'veri surumu:', result.dataVersion, JSON.stringify(result.stages || {}));
             products = list;
             pushProducts();
         })
@@ -177,9 +179,14 @@ $w.onReady(function () {
 
         // Iframe'den herhangi bir mesaj gelmesi yuklendigini kanitliyor.
         iframeAlive = true;
-        pushProducts();
 
-        if (data.type === 'kuzelaReady') return;
+        if (data.type === 'kuzelaReady') {
+            // Iframe (yeniden) yuklendi: listeyi ona bir kez daha gonder.
+            delivered = false;
+            pushProducts();
+            return;
+        }
+        pushProducts();
 
         if (data.type === 'kuzelaHomeHeight') {
             const height = Number(data.height);
