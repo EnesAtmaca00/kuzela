@@ -4,7 +4,11 @@ import wixSite from 'wix-site';
 import { getHighlights } from 'backend/menu.web';
 
 // Iframe'den gelen gezinme istekleri yalnizca bu adresle baslayabilir.
-const SITE_ORIGIN = 'https://nepagy.wixstudio.com/';
+const SITE_BASES = [
+    'https://www.kuzela.be',
+    'https://kuzela.be',
+    'https://nepagy.wixstudio.com/kuzela'
+];
 
 /*
  * Ana sayfa tek bir HtmlComponent'ten (#html1) olusuyor.
@@ -52,13 +56,16 @@ function knownPagePaths() {
 function navigateTo(rawUrl, pageKey) {
     const target = String(rawUrl || '');
     // Iframe baska bir origin'de; yalnizca bu sitenin adreslerine izin var.
-    if (target.indexOf(SITE_ORIGIN) !== 0) return;
+    const matchedBase = SITE_BASES.find((siteBase) => target === siteBase || target.indexOf(siteBase + '/') === 0);
+    if (!matchedBase) return;
 
     // wixLocation.to() site koku baz alinan goreli yolu guvenilir isliyor.
     // Mutlak adres verildiginde bazi kurulumlarda sessizce hicbir sey yapmiyor,
     // bu yuzden once goreli yola cevirmeyi deniyoruz.
     const base = String(wixLocation.baseUrl || '').replace(/\/+$/, '');
-    const path = base && target.indexOf(base) === 0 ? target.slice(base.length) : '';
+    const path = base && target.indexOf(base + '/') === 0
+        ? target.slice(base.length)
+        : target.slice(matchedBase.length);
 
     // Sayfa adi degisince (orn. /online-ordering -> /bestel-nu) eski adres
     // sessizce olu kaliyor: wixLocation.to() cozulmeyen bir yol icin hicbir
